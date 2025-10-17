@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
 kotlin {
@@ -13,19 +13,21 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
+        androidMain.dependencies {
             implementation(projects.feature.currencyDetails.currencyDetailsDomain)
             implementation(projects.feature.currencyDetails.currencyDetailsNetwork)
+            implementation(projects.feature.currencyDetails.currencyDetailsData)
+            implementation(projects.feature.currencyDetails.currencyDetailsPresentation)
             implementation(libs.koin.core)
         }
-        commonTest.dependencies {
+        androidUnitTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
 }
 
 android {
-    namespace = "dev.michalkonkel.nbp.currency.details.data"
+    namespace = "dev.michalkonkel.nbp.currency.list.di"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

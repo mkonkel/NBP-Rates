@@ -1,4 +1,4 @@
-package dev.michalkonkel.nbp.currency_list.presentation
+package dev.michalkonkel.nbp.currency_details.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,19 +19,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.michalkonkel.nbp.currency_list.domain.Currency
+import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
+import dev.michalkonkel.nbp.currency_details.domain.HistoricalRate
 import org.koin.compose.koinInject
 
 @Composable
-fun CurrencyListScreen(modifier: Modifier = Modifier) {
-    val viewModel: CurrencyListViewModel = koinInject()
+fun CurrencyDetailsScreen(
+    currencyCode: String,
+    modifier: Modifier = Modifier,
+) {
+    val viewModel: CurrencyDetailsViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
+    // Load currency details when screen is composed
+    androidx.compose.runtime.LaunchedEffect(currencyCode) {
+        viewModel.loadCurrencyDetails(currencyCode)
+    }
+
     Box(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp),
+        modifier = modifier.fillMaxSize().padding(16.dp),
     ) {
         when {
             state.isLoading -> {
@@ -48,11 +54,23 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
                 )
             }
 
-            else -> {
+            state.currencyDetails != null -> {
                 LazyColumn {
-                    items(state.currencies) { currency ->
-                        CurrencyItem(currency = currency)
+                    item {
+                        CurrencyInfoCard(currencyDetails = state.currencyDetails!!)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Historical Rates",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    items(state.currencyDetails!!.historicalRates) { rate ->
+                        HistoricalRateItem(rate = rate)
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
             }
@@ -61,7 +79,7 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CurrencyItem(currency: Currency) {
+private fun CurrencyInfoCard(currencyDetails: CurrencyDetails) {
     Card(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -69,24 +87,51 @@ private fun CurrencyItem(currency: Currency) {
             modifier = Modifier.padding(16.dp),
         ) {
             Text(
-                text = currency.name,
+                text = currencyDetails.name,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = currency.code,
+                text = currencyDetails.code,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Rate: ${currency.currentRate}",
+                text = "Current Rate: ${currencyDetails.currentRate}",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = "Table: ${currency.table}",
+                text = "Effective Date: ${currencyDetails.effectiveDate}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "Table: ${currencyDetails.table}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun HistoricalRateItem(rate: HistoricalRate) {
+    Card(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+        ) {
+            Text(
+                text = rate.effectiveDate,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+            )
+            Text(
+                text = "Rate: ${rate.rate}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

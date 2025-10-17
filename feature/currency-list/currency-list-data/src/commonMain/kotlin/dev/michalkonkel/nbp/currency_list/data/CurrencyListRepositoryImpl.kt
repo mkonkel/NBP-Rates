@@ -12,7 +12,7 @@ internal class CurrencyListRepositoryImpl(
             val result =
                 currencyListApi.getCurrentRates()
                     .map { dtos ->
-                        TODO()
+                        TODO("Mapping not implemented")
                     }
             Result.success(result)
         } catch (e: Exception) {
