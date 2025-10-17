@@ -10,8 +10,9 @@ internal class CurrencyListRepositoryImpl(
 ) : CurrencyListRepository {
     override suspend fun getCurrentRates(): Result<List<CurrencyTable>> {
         return try {
-            val tableDto = currencyListApi.getCurrentRates()
-                .map { CurrencyListMapper.mapToDomain(it) }
+            val tableDto =
+                currencyListApi.getCurrentRates()
+                    .map { CurrencyListMapper.mapToDomain(it) }
 
             Result.success(tableDto)
         } catch (e: Exception) {

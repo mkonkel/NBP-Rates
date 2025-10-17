@@ -34,56 +34,58 @@ class CurrencyListApiIntegrationTest : KoinTest {
     }
 
     @Test
-    fun `getCurrentRates should return TableDto with rates list`() = runTest {
-        // Given - API instance injected by Koin
+    fun `getCurrentRates should return TableDto with rates list`() =
+        runTest {
+            // Given - API instance injected by Koin
 
             // When - Test JSON serialization with shouldNotThrowAny
             // This tests if the API call and JSON serialization works without throwing serialization exceptions
             shouldNotThrowAny {
                 val result = api.getCurrentRates()
 
-            // Then - Verify that JSON serialization worked and we got a TableDto
-            result.rates.shouldNotBeEmpty()
+                // Then - Verify that JSON serialization worked and we got a TableDto
+                result.rates.shouldNotBeEmpty()
 
-            val firstCurrency = result.rates.first()
-            firstCurrency.currency.shouldBe("dolar amerykański")
-            firstCurrency.code.shouldBe("USD")
-            firstCurrency.mid.shouldNotBeNull()
-            firstCurrency.mid.shouldBeGreaterThan(0.0)
+                val firstCurrency = result.rates.first()
+                firstCurrency.currency.shouldBe("dolar amerykański")
+                firstCurrency.code.shouldBe("USD")
+                firstCurrency.mid.shouldNotBeNull()
+                firstCurrency.mid.shouldBeGreaterThan(0.0)
 
-            // Verify table metadata
-            result.table.shouldBe("A")
-            result.effectiveDate.shouldNotBeBlank()
-            result.no.shouldNotBeBlank()
+                // Verify table metadata
+                result.table.shouldBe("A")
+                result.effectiveDate.shouldNotBeBlank()
+                result.no.shouldNotBeBlank()
+            }
         }
-    }
 
     @Test
-    fun `getCurrentRates should properly serialize all TableDto fields`() = runTest {
-        // Given - API instance injected by Koin
+    fun `getCurrentRates should properly serialize all TableDto fields`() =
+        runTest {
+            // Given - API instance injected by Koin
 
             // When - Test JSON serialization with shouldNotThrowAny
             shouldNotThrowAny {
                 val result = api.getCurrentRates()
 
-            // Then - Verify that all table fields are properly serialized
-            result.table.shouldNotBeNull()
-            result.table.shouldBe("A")
-            result.no.shouldNotBeNull()
-            result.no.shouldNotBeBlank()
-            result.effectiveDate.shouldNotBeNull()
-            result.effectiveDate.shouldNotBeBlank()
-            result.rates.shouldNotBeNull()
+                // Then - Verify that all table fields are properly serialized
+                result.table.shouldNotBeNull()
+                result.table.shouldBe("A")
+                result.no.shouldNotBeNull()
+                result.no.shouldNotBeBlank()
+                result.effectiveDate.shouldNotBeNull()
+                result.effectiveDate.shouldNotBeBlank()
+                result.rates.shouldNotBeNull()
 
-            // Verify all currency fields are properly serialized
-            result.rates.forEach { currency ->
-                currency.currency.shouldNotBeNull()
-                currency.currency.shouldNotBeBlank()
-                currency.code.shouldNotBeNull()
-                currency.code.length.shouldBe(3)
-                currency.mid.shouldNotBeNull()
-                currency.mid.shouldBeGreaterThan(0.0)
+                // Verify all currency fields are properly serialized
+                result.rates.forEach { currency ->
+                    currency.currency.shouldNotBeNull()
+                    currency.currency.shouldNotBeBlank()
+                    currency.code.shouldNotBeNull()
+                    currency.code.length.shouldBe(3)
+                    currency.mid.shouldNotBeNull()
+                    currency.mid.shouldBeGreaterThan(0.0)
+                }
             }
         }
-    }
 }

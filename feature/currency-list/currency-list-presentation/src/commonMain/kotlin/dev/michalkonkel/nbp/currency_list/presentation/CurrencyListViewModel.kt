@@ -45,7 +45,8 @@ internal class CurrencyListViewModel(
                 .onSuccess { rateTable ->
                     _uiState.value =
                         _uiState.value.copy(
-                            currencies = rateTable.first().rates, //TDOD fixme!
+                            currencies = rateTable.first().rates,
+                            // TODO: fix me!
                             isLoading = false,
                             error = null,
                         )

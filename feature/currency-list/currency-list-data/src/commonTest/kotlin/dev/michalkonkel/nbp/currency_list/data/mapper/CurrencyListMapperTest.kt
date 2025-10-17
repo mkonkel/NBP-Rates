@@ -1,8 +1,6 @@
 package dev.michalkonkel.nbp.currency_list.data.mapper
 
 import dev.michalkonkel.nbp.core.domain.Table
-import dev.michalkonkel.nbp.currency_list.domain.Currency
-import dev.michalkonkel.nbp.currency_list.domain.CurrencyTable
 import dev.michalkonkel.nbp.currency_list.network.models.CurrencyDto
 import dev.michalkonkel.nbp.currency_list.network.models.TableDto
 import io.kotest.assertions.assertSoftly
@@ -109,23 +107,25 @@ class CurrencyListMapperTest {
     @Test
     fun `mapToDomain should map TableDto to CurrencyTable`() {
         // Given
-        val tableDto = TableDto(
-            table = "A",
-            no = "202/A/NBP/2025",
-            effectiveDate = "2025-10-17",
-            rates = listOf(
-                CurrencyDto(
-                    currency = "dolar amerykański",
-                    code = "USD",
-                    mid = 3.6388,
-                ),
-                CurrencyDto(
-                    currency = "euro",
-                    code = "EUR",
-                    mid = 4.2565,
-                )
+        val tableDto =
+            TableDto(
+                table = "A",
+                no = "202/A/NBP/2025",
+                effectiveDate = "2025-10-17",
+                rates =
+                    listOf(
+                        CurrencyDto(
+                            currency = "dolar amerykański",
+                            code = "USD",
+                            mid = 3.6388,
+                        ),
+                        CurrencyDto(
+                            currency = "euro",
+                            code = "EUR",
+                            mid = 4.2565,
+                        ),
+                    ),
             )
-        )
 
         // When
         val result = CurrencyListMapper.mapToDomain(tableDto)
@@ -154,12 +154,13 @@ class CurrencyListMapperTest {
     @Test
     fun `mapToDomain should handle TableDto with empty rates list`() {
         // Given
-        val tableDto = TableDto(
-            table = "A",
-            no = "202/A/NBP/2025",
-            effectiveDate = "2025-10-17",
-            rates = emptyList()
-        )
+        val tableDto =
+            TableDto(
+                table = "A",
+                no = "202/A/NBP/2025",
+                effectiveDate = "2025-10-17",
+                rates = emptyList(),
+            )
 
         // When
         val result = CurrencyListMapper.mapToDomain(tableDto)
@@ -176,19 +177,21 @@ class CurrencyListMapperTest {
     @Test
     fun `mapToDomain should handle different table types`() {
         // Given
-        val tableDtoA = TableDto(
-            table = "A",
-            no = "202/A/NBP/2025",
-            effectiveDate = "2025-10-17",
-            rates = emptyList()
-        )
+        val tableDtoA =
+            TableDto(
+                table = "A",
+                no = "202/A/NBP/2025",
+                effectiveDate = "2025-10-17",
+                rates = emptyList(),
+            )
 
-        val tableDtoB = TableDto(
-            table = "B",
-            no = "203/B/NBP/2025",
-            effectiveDate = "2025-10-17",
-            rates = emptyList()
-        )
+        val tableDtoB =
+            TableDto(
+                table = "B",
+                no = "203/B/NBP/2025",
+                effectiveDate = "2025-10-17",
+                rates = emptyList(),
+            )
 
         // When
         val resultA = CurrencyListMapper.mapToDomain(tableDtoA)

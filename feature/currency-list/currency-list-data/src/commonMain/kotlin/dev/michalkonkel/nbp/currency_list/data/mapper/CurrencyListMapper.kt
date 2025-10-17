@@ -10,16 +10,16 @@ import dev.michalkonkel.nbp.currency_list.network.models.TableDto
  * Mapper for converting currency DTOs to domain models.
  */
 internal object CurrencyListMapper {
-
     /**
      * Maps TableDto to CurrencyTable domain model
      */
-    fun mapToDomain(tableDto: TableDto): CurrencyTable = CurrencyTable(
-        table = Table.fromString(tableDto.table),
-        no = tableDto.no,
-        effectiveDate = tableDto.effectiveDate,
-        rates = mapToDomain(tableDto.rates),
-    )
+    fun mapToDomain(tableDto: TableDto): CurrencyTable =
+        CurrencyTable(
+            table = Table.fromString(tableDto.table),
+            no = tableDto.no,
+            effectiveDate = tableDto.effectiveDate,
+            rates = mapToDomain(tableDto.rates),
+        )
 
     /**
      * Maps a single CurrencyDto to Currency domain model.
