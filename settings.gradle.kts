@@ -29,5 +29,14 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":core:ui")
 include(":core:network")
-include(":domain")
+include(":core:database")
+include(":feature:currency_list:currency-list-data")
+include(":feature:currency_list:currency-list-domain")
+include(":feature:currency_list:currency-list-network")
+include(":feature:currency_list:currency-list-presentation")
+include(":feature:currency_details:currency_details-data")
+include(":feature:currency_details:currency_details-domain")
+include(":feature:currency_details:currency_details-network")
+include(":feature:currency_details:currency_details-presentation")

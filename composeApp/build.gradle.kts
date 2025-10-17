@@ -38,14 +38,17 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(projects.core.network)
-            implementation(projects.domain)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(projects.core.ui)
         }
 
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+            implementation(libs.koin.compose)
         }
 
         iosMain.dependencies {
