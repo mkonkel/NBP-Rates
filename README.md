@@ -44,6 +44,8 @@ Both feature modules are **fully implemented** with:
 - ✅ Dependency injection with Koin
 - ✅ Android-first KMP configuration
 - ✅ Code quality with Detekt and Spotless
+- ✅ Comprehensive unit tests with fake implementations
+- ✅ Test isolation and clean code practices
 - ✅ Buildable modules with proper dependencies
 
 ## Technology Stack
@@ -53,6 +55,7 @@ Both feature modules are **fully implemented** with:
 - **Ktor** - HTTP client for API communication
 - **Kotlinx.serialization** - JSON parsing
 - **Koin** - Dependency injection
+- **Kotest** - Modern testing framework with expressive assertions
 - **Detekt & Spotless** - Code quality and formatting
 
 ## Key Features
@@ -102,6 +105,16 @@ The application consumes the official NBP API endpoints:
 ./gradlew detekt
 ```
 
+#### Testing
+```bash
+# Run all unit tests
+./gradlew test
+
+# Run specific feature tests
+./gradlew :feature:currency-list:currency-list-presentation:test
+./gradlew :feature:currency-details:currency-details-presentation:test
+```
+
 #### Module-specific builds
 ```bash
 # Build individual feature modules
@@ -133,6 +146,9 @@ feature/
 - **Spotless**: Consistent formatting with ktlint
 - **Architecture**: Clean separation of concerns
 - **Testing**: Repository pattern with Result<T> for error handling
+- **Test Coverage**: Unit tests with fake implementations and proper isolation
+- **Code Quality**: Use of `with()` blocks to eliminate code duplication
+- **Null Safety**: Proper null handling with `shouldNotBeNull()` instead of `!!`
 
 ---
 

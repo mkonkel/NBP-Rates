@@ -10,21 +10,21 @@ import dev.michalkonkel.nbp.currency_details.network.models.RateDto
  * Mapper for converting currency rate DTOs to domain models.
  */
 internal object CurrencyDetailsMapper {
-    
     /**
      * Maps a single RateDto to HistoricalRate domain model.
      */
-    private fun mapRateToDomain(rate: RateDto): HistoricalRate = HistoricalRate(
-        effectiveDate = rate.effectiveDate,
-        rate = rate.mid,
-    )
-    
+    private fun mapRateToDomain(rate: RateDto): HistoricalRate =
+        HistoricalRate(
+            effectiveDate = rate.effectiveDate,
+            rate = rate.mid,
+        )
+
     /**
      * Maps CurrencyRateDto to CurrencyDetails domain model.
      */
     fun mapToDomain(dto: CurrencyRateDto): CurrencyDetails {
         val firstRate = dto.rates.firstOrNull()
-        
+
         return CurrencyDetails(
             name = dto.currency,
             code = dto.code,
