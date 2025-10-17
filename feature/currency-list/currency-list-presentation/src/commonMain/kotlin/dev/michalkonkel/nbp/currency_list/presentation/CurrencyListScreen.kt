@@ -20,16 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.michalkonkel.nbp.currency_list.domain.Currency
+import org.koin.compose.koinInject
 
 @Composable
 fun CurrencyListScreen(
-    viewModel: CurrencyListViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val viewModel: CurrencyListViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
     Box(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
         when {
             state.isLoading -> {

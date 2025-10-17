@@ -14,7 +14,7 @@ import org.koin.compose.koinInject
 @Preview
 fun App() {
     MaterialTheme {
-        val viewModel: CurrencyListViewModel = koinInject()
+
 
         CurrencyListScreen(
             viewModel = viewModel,
