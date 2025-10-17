@@ -1,5 +1,7 @@
 package dev.michalkonkel.nbp.currency_list.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +25,10 @@ import dev.michalkonkel.nbp.currency_list.domain.Currency
 import org.koin.compose.koinInject
 
 @Composable
-fun CurrencyListScreen(modifier: Modifier = Modifier) {
+fun CurrencyListScreen(
+    onCurrencyClick: (String) -> Unit = {},
+    modifier: Modifier = Modifier,
+) {
     val viewModel: CurrencyListViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
@@ -51,7 +56,10 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
             else -> {
                 LazyColumn {
                     items(state.currencies) { currency ->
-                        CurrencyItem(currency = currency)
+                        CurrencyItem(
+                            currency = currency,
+                            onClick = { onCurrencyClick(currency.code) }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -61,9 +69,14 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CurrencyItem(currency: Currency) {
+private fun CurrencyItem(
+    currency: Currency,
+    onClick: () -> Unit,
+) {
     Card(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onClick() },
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

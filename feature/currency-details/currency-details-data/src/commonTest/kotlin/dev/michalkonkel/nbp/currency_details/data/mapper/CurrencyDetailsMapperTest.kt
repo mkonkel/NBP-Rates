@@ -77,8 +77,9 @@ class CurrencyDetailsMapperTest {
     @Test
     fun `mapToDomain should handle invalid table type gracefully`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "X", // Invalid table type
+        // Invalid table type
+      val dto = CurrencyRateDto(
+            table = "X",
             currency = "test currency",
             code = "TEST",
             rates = listOf(
