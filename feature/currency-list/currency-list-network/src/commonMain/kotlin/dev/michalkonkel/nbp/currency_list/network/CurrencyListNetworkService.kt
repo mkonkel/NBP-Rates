@@ -18,5 +18,4 @@ class CurrencyListNetworkService(
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
 }
