@@ -10,14 +10,13 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "Database"
+            baseName = "Domain"
             isStatic = true
         }
     }
 
     sourceSets {
         commonMain.dependencies {
-            // Room database dependencies will be added here
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

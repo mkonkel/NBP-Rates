@@ -1,5 +1,6 @@
 package dev.michalkonkel.nbp.currency_details.data
 
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
 import dev.michalkonkel.nbp.currency_details.domain.HistoricalRate
@@ -19,14 +20,15 @@ internal class CurrencyDetailsRepositoryImpl(
                         name = dto.currency,
                         code = dto.code,
                         currentRate = dto.rates.firstOrNull()?.mid ?: 0.0,
-                        table = dto.table,
+                        table = Table.fromString(dto.table),
                         effectiveDate = dto.rates.firstOrNull()?.effectiveDate ?: "",
-                        historicalRates = dto.rates.map { rate ->
-                            HistoricalRate(
-                                effectiveDate = rate.effectiveDate,
-                                rate = rate.mid
-                            )
-                        }
+                        historicalRates =
+                            dto.rates.map { rate ->
+                                HistoricalRate(
+                                    effectiveDate = rate.effectiveDate,
+                                    rate = rate.mid,
+                                )
+                            },
                     )
                 }
             Result.success(result)

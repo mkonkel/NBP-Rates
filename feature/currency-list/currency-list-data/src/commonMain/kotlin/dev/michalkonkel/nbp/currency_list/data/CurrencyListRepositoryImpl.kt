@@ -1,5 +1,6 @@
 package dev.michalkonkel.nbp.currency_list.data
 
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_list.domain.Currency
 import dev.michalkonkel.nbp.currency_list.domain.CurrencyListRepository
 import dev.michalkonkel.nbp.currency_list.network.api.CurrencyListApi
@@ -16,9 +17,9 @@ internal class CurrencyListRepositoryImpl(
                         name = dto.currency,
                         code = dto.code,
                         currentRate = dto.mid ?: 0.0,
-                        table = "A"
+                        table = Table.TABLE_A,
                     )
-                }
+                },
             )
         } catch (e: Exception) {
             Result.failure(e)

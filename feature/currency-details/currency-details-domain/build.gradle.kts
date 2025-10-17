@@ -14,6 +14,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.core.domain)
             implementation(libs.koin.core)
         }
         commonTest.dependencies {
