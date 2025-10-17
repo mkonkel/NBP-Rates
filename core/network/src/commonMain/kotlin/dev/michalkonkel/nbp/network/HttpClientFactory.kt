@@ -7,10 +7,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 /**
- * Factory for creating platform-specific HttpClient instances.
- * Provides configured HTTP client for NBP API communication.
+ * Factory for creating configured HttpClient instances.
+ * Provides HTTP client for NBP API communication.
  */
-object HttpClientFactory {
+internal class HttpClientFactory {
     fun create(): HttpClient =
         HttpClient {
             install(ContentNegotiation) {

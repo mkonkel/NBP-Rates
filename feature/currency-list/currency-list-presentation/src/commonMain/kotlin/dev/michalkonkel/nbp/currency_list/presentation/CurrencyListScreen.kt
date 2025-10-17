@@ -58,7 +58,7 @@ fun CurrencyListScreen(
 }
 
 @Composable
-private fun CurrencyItem(currency: dev.michalkonkel.nbp.currency_list.domain.Currency) {
+private fun CurrencyItem(currency: Currency) {
     Card(
         modifier = Modifier.fillMaxSize(),
     ) {

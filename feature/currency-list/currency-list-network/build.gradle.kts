@@ -1,12 +1,15 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.androidLibrary)
 }
 
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
@@ -14,6 +17,7 @@ kotlin {
         androidMain.dependencies {
             implementation(projects.core.network)
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         androidUnitTest.dependencies {
             implementation(libs.kotlin.test)
