@@ -81,18 +81,20 @@ class CurrencyDetailsMapperTest {
     fun `mapToDomain should handle invalid table type gracefully`() {
         // Given
         // Invalid table type
-        val dto = CurrencyRateDto(
-            table = "X",
-            currency = "test currency",
-            code = "TEST",
-            rates = listOf(
-                RateDto(
-                    no = "1/X/NBP/2024",
-                    effectiveDate = "2024-01-02",
-                    mid = 1.0,
-                ),
-            ),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "X",
+                currency = "test currency",
+                code = "TEST",
+                rates =
+                    listOf(
+                        RateDto(
+                            no = "1/X/NBP/2024",
+                            effectiveDate = "2024-01-02",
+                            mid = 1.0,
+                        ),
+                    ),
+            )
 
         shouldThrow<IllegalStateException> {
             CurrencyDetailsMapper.mapToDomain(dto)

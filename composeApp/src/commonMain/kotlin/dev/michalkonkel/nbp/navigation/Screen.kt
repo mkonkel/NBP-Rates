@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 sealed interface Screen {
     @Serializable
     data object CurrencyList : Screen
-    
+
     @Serializable
     data class CurrencyDetails(val currencyCode: String) : Screen
 }

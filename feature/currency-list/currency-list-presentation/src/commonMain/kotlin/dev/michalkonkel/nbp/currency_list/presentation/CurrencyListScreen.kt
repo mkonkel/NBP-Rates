@@ -1,6 +1,5 @@
 package dev.michalkonkel.nbp.currency_list.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,7 +57,7 @@ fun CurrencyListScreen(
                     items(state.currencies) { currency ->
                         CurrencyItem(
                             currency = currency,
-                            onClick = { onCurrencyClick(currency.code) }
+                            onClick = { onCurrencyClick(currency.code) },
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -74,9 +73,10 @@ private fun CurrencyItem(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClick() },
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .clickable { onClick() },
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

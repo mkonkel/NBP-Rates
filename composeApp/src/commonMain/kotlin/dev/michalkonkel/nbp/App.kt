@@ -16,19 +16,19 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
         val navController = rememberNavController()
-        
+
         NavHost(
             navController = navController,
-            startDestination = Screen.CurrencyList
+            startDestination = Screen.CurrencyList,
         ) {
             composable<Screen.CurrencyList> {
                 CurrencyListScreen(
                     onCurrencyClick = { currencyCode ->
                         navController.navigate(Screen.CurrencyDetails(currencyCode))
-                    }
+                    },
                 )
             }
-            
+
             composable<Screen.CurrencyDetails> { backStackEntry ->
                 val args = backStackEntry.toRoute<Screen.CurrencyDetails>()
                 CurrencyDetailsScreen(currencyCode = args.currencyCode)
