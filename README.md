@@ -86,7 +86,7 @@ NBP-Rates/
 
 ### Current Endpoints
 - **Current Rates**: `/api/exchangerates/tables/a` and `/api/exchangerates/tables/b`
-- **Historical Rates**: `/api/exchangerates/rates/a/{code}/last/{days}`
+- **Historical Rates**: `/api/exchangerates/rates/{table}/{code}/last/{days}`
 
 ### API Architecture
 - **Parallel API Calls**: Optimized performance with concurrent requests
