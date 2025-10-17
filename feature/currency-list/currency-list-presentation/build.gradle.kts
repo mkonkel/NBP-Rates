@@ -28,8 +28,13 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
         }
-        androidUnitTest.dependencies {
+        commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.junit)
+            implementation(libs.kotest.assertions)
+            implementation(libs.koin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(projects.feature.currencyList.currencyListData)
         }
     }
 }

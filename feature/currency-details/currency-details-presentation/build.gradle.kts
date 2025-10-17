@@ -30,6 +30,11 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.junit)
+            implementation(libs.kotest.assertions)
+            implementation(libs.koin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(projects.feature.currencyDetails.currencyDetailsData)
         }
     }
 }
