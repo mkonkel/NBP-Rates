@@ -2,13 +2,13 @@ package dev.michalkonkel.nbp.currency_list.presentation
 
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_list.domain.Currency
-import dev.michalkonkel.nbp.currency_list.domain.CurrencyListRepository
+import dev.michalkonkel.nbp.currency_list.presentation.usecase.LoadCurrencyRatesUseCase
 
 /**
- * Fake implementation of CurrencyListRepository for testing purposes.
+ * Fake implementation of LoadCurrencyRatesUseCase for testing purposes.
  * Provides static test data that can be controlled in unit tests.
  */
-class FakeCurrencyListRepository(
+class FakeLoadCurrencyRatesUseCase(
     private var currenciesResult: Result<List<Currency>> =
         Result.success(
             listOf(
@@ -32,13 +32,13 @@ class FakeCurrencyListRepository(
                 ),
             ),
         ),
-) : CurrencyListRepository {
-    override suspend fun getCurrencies(): Result<List<Currency>> {
+) : LoadCurrencyRatesUseCase {
+    override suspend operator fun invoke(): Result<List<Currency>> {
         return currenciesResult
     }
 
     /**
-     * Helper method to set the result that will be returned by getCurrencies.
+     * Helper method to set the result that will be returned by invoke.
      * Useful for testing different scenarios (success, error, empty data).
      */
     fun setCurrenciesResult(result: Result<List<Currency>>) {
@@ -46,10 +46,10 @@ class FakeCurrencyListRepository(
     }
 
     companion object {
-        fun createEmpty() = FakeCurrencyListRepository(Result.success(emptyList()))
+        fun createEmpty() = FakeLoadCurrencyRatesUseCase(Result.success(emptyList()))
 
         fun createError() =
-            FakeCurrencyListRepository(
+            FakeLoadCurrencyRatesUseCase(
                 Result.failure(Exception("Network error")),
             )
     }

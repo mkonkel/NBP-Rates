@@ -1,8 +1,9 @@
 package dev.michalkonkel.nbp.currency_details.presentation
 
+import app.cash.turbine.test
 import dev.michalkonkel.nbp.core.domain.Table
-import dev.michalkonkel.nbp.currency_details.usecase.LoadCurrencyDetailsUseCase
 import dev.michalkonkel.nbp.currency_details.presentation.di.currencyDetailsPresentationModule
+import dev.michalkonkel.nbp.currency_details.usecase.LoadCurrencyDetailsUseCase
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
@@ -56,24 +57,31 @@ class CurrencyDetailsViewModelTest : KoinTest {
             declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                with(currencyDetails.shouldNotBeNull()) {
-                    code.shouldBe("USD")
-                    name.shouldBe("dolar amerykański")
-                    currentRate.shouldBe(4.1234)
-                    effectiveDate.shouldBe("2024-01-15")
-                    historicalRates.shouldHaveSize(5)
-                    with(historicalRates.first()) {
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+
+                // When
+                viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    with(currencyDetails.shouldNotBeNull()) {
+                        code.shouldBe("USD")
+                        name.shouldBe("dolar amerykański")
+                        currentRate.shouldBe(4.1234)
                         effectiveDate.shouldBe("2024-01-15")
-                        rate.shouldBe(4.1234)
+                        historicalRates.shouldHaveSize(5)
+                        with(historicalRates.first()) {
+                            effectiveDate.shouldBe("2024-01-15")
+                            rate.shouldBe(4.1234)
+                        }
                     }
+                    error.shouldBeNull()
                 }
-                error.shouldBeNull()
             }
         }
 
@@ -85,14 +93,20 @@ class CurrencyDetailsViewModelTest : KoinTest {
             declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                currencyDetails.shouldBeNull()
-                error.shouldBe("Network error")
+                // When
+                viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencyDetails.shouldBeNull()
+                    error.shouldBe("Network error")
+                }
             }
         }
 
@@ -109,17 +123,23 @@ class CurrencyDetailsViewModelTest : KoinTest {
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("TEST", Table.TABLE_A, 1)
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                with(currencyDetails.shouldNotBeNull()) {
-                    code.shouldBe("TEST")
-                    historicalRates.shouldBeEmpty()
+                // When
+                viewModel.loadCurrencyDetails("TEST", Table.TABLE_A, 1)
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    with(currencyDetails.shouldNotBeNull()) {
+                        code.shouldBe("TEST")
+                        historicalRates.shouldBeEmpty()
+                    }
+                    error.shouldBeNull()
                 }
-                error.shouldBeNull()
             }
         }
 
@@ -168,16 +188,24 @@ class CurrencyDetailsViewModelTest : KoinTest {
             declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 10)
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                currencyDetails.shouldNotBeNull()
-                currencyDetails.historicalRates.shouldHaveSize(5) // Fake repo returns 5 rates regardless of
-                // days parameter
-                error.shouldBeNull()
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+
+                // When
+                viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 10)
+
+                skipItems(1) // Skip initial loading state
+
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencyDetails.shouldNotBeNull()
+                    currencyDetails.historicalRates.shouldHaveSize(5) // Fake repo returns 5 rates regardless of
+                    // days parameter
+                    error.shouldBeNull()
+                }
             }
         }
 
@@ -193,20 +221,27 @@ class CurrencyDetailsViewModelTest : KoinTest {
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                with(currencyDetails.shouldNotBeNull()) {
-                    code.shouldBe("EUR")
-                    name.shouldBe("euro")
-                    currentRate.shouldBe(4.5678)
-                    historicalRates.shouldHaveSize(3)
-                    historicalRates.first().rate.shouldBe(4.5678)
+
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+
+                // When
+                viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
+
+                skipItems(1) // Skip initial loading state
+
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    with(currencyDetails.shouldNotBeNull()) {
+                        code.shouldBe("EUR")
+                        name.shouldBe("euro")
+                        currentRate.shouldBe(4.5678)
+                        historicalRates.shouldHaveSize(3)
+                        historicalRates.first().rate.shouldBe(4.5678)
+                    }
+                    error.shouldBeNull()
                 }
-                error.shouldBeNull()
             }
         }
 
@@ -222,25 +257,31 @@ class CurrencyDetailsViewModelTest : KoinTest {
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
-            // When
-            viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
-            with(viewModel.uiState.value.currencyDetails.shouldNotBeNull()) {
-                code.shouldBe("EUR")
-            }
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
 
-            // Update use case to return USD data
-            fakeUseCase.setCurrencyDetailsResult(
-                Result.success(
-                    FakeLoadCurrencyDetailsUseCase().currencyDetails!!,
-                ),
-            )
+                // When
+                viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
 
-            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
+                skipItems(1) // Skip initial loading state
 
-            // Then
-            with(viewModel.uiState.value.currencyDetails.shouldNotBeNull()) {
-                code.shouldBe("USD")
-                name.shouldBe("dolar amerykański")
+                with(awaitItem().currencyDetails.shouldNotBeNull()) { code.shouldBe("EUR") }
+
+                // Update use case to return USD data
+                fakeUseCase.setCurrencyDetailsResult(
+                    Result.success(FakeLoadCurrencyDetailsUseCase().currencyDetails!!),
+                )
+
+                // When
+                viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem().currencyDetails.shouldNotBeNull()) {
+                    code.shouldBe("USD")
+                    name.shouldBe("dolar amerykański")
+                }
             }
         }
 }

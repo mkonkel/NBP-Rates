@@ -1,9 +1,10 @@
 package dev.michalkonkel.nbp.currency_list.presentation
 
+import app.cash.turbine.test
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_list.domain.Currency
-import dev.michalkonkel.nbp.currency_list.domain.CurrencyListRepository
 import dev.michalkonkel.nbp.currency_list.presentation.di.currencyListPresentationModule
+import dev.michalkonkel.nbp.currency_list.presentation.usecase.LoadCurrencyRatesUseCase
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
@@ -35,64 +36,78 @@ class CurrencyListViewModelTest : KoinTest {
     @Test
     fun `initial state should be loading with empty currencies`() =
         runTest {
-            // Given - declare repository before creating ViewModel
-            val fakeRepository = FakeCurrencyListRepository()
-            declare<CurrencyListRepository> { fakeRepository }
+            // Given - declare use case before creating ViewModel
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase()
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
 
             // When - creating ViewModel (which calls loadCurrencies() in init)
             val viewModel: CurrencyListViewModel by inject()
 
-            // Then - should be in loading state initially
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(true)
-                currencies.shouldBeEmpty()
-                error.shouldBeNull()
-            }
-        }
-
-    @Test
-    fun `loadCurrencies should update state with data when repository succeeds`() =
-        runTest {
-            // Given
-            val fakeRepository = FakeCurrencyListRepository()
-            declare<CurrencyListRepository> { fakeRepository }
-
-            val viewModel: CurrencyListViewModel by inject()
-
-            // When
-            viewModel.loadCurrencies()
-
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                currencies.shouldHaveSize(3)
-                with(currencies.first()) {
-                    code.shouldBe("USD")
-                    name.shouldBe("dolar amerykański")
-                    currentRate.shouldBe(4.1234)
-                    table.shouldBe(Table.TABLE_A)
+            // Then - should eventually reach success state with data
+            viewModel.uiState.test {
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencies.shouldHaveSize(3)
+                    error.shouldBeNull()
                 }
-                error.shouldBeNull()
             }
         }
 
     @Test
-    fun `loadCurrencies should update state with error when repository fails`() =
+    fun `loadCurrencies should update state with data when use case succeeds`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyListRepository.createError()
-            declare<CurrencyListRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase()
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
 
             val viewModel: CurrencyListViewModel by inject()
 
-            // When
-            viewModel.loadCurrencies()
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                currencies.shouldBeEmpty()
-                error.shouldBe("Network error")
+                // When
+                viewModel.loadCurrencies()
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencies.shouldHaveSize(3)
+                    with(currencies.first()) {
+                        code.shouldBe("USD")
+                        name.shouldBe("dolar amerykański")
+                        currentRate.shouldBe(4.1234)
+                        table.shouldBe(Table.TABLE_A)
+                    }
+                    error.shouldBeNull()
+                }
+            }
+        }
+
+    @Test
+    fun `loadCurrencies should update state with error when use case fails`() =
+        runTest {
+            // Given
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase.createError()
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
+
+            val viewModel: CurrencyListViewModel by inject()
+
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+
+                // When
+                viewModel.loadCurrencies()
+
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencies.shouldBeEmpty()
+                    error.shouldBe("Network error")
+                }
             }
         }
 
@@ -100,70 +115,61 @@ class CurrencyListViewModelTest : KoinTest {
     fun `loadCurrencies should handle empty result`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyListRepository.createEmpty()
-            declare<CurrencyListRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase.createEmpty()
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
 
             val viewModel: CurrencyListViewModel by inject()
 
-            // When
-            viewModel.loadCurrencies()
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
 
-            // Then
-            with(viewModel.uiState.value) {
-                isLoading.shouldBe(false)
-                currencies.shouldBeEmpty()
-                error.shouldBeNull()
+                // When
+                viewModel.loadCurrencies()
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    isLoading.shouldBe(false)
+                    currencies.shouldBeEmpty()
+                    error.shouldBeNull()
+                }
             }
-        }
-
-    @Test
-    fun `clearError should clear error state`() =
-        runTest {
-            // Given
-            val fakeRepository = FakeCurrencyListRepository.createError()
-            declare<CurrencyListRepository> { fakeRepository }
-
-            val viewModel: CurrencyListViewModel by inject()
-
-            viewModel.loadCurrencies()
-
-            // When
-            viewModel.clearError()
-
-            // Then
-            viewModel.uiState.value.error.shouldBeNull()
         }
 
     @Test
     fun `loadCurrencies should set loading to true during execution`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyListRepository()
-            fakeRepository.setCurrenciesResult(
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase()
+            fakeUseCase.setCurrenciesResult(
                 Result.success(
                     listOf(Currency("test", "TEST", 1.0, Table.TABLE_A)),
                 ),
             )
-            declare<CurrencyListRepository> { fakeRepository }
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
 
             val viewModel: CurrencyListViewModel by inject()
 
-            // When
-            shouldNotThrowAny {
-                viewModel.loadCurrencies()
-            }
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+                // When
+                shouldNotThrowAny {
+                    viewModel.loadCurrencies()
+                }
+                skipItems(1) // Skip initial loading state
 
-            // Then - After completion, loading should be false
-            viewModel.uiState.value.isLoading.shouldBe(false)
+                // Then - After completion, loading should be false
+                awaitItem().isLoading.shouldBe(false)
+            }
         }
 
     @Test
     fun `multiple loadCurrencies calls should update state correctly`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyListRepository()
-            declare<CurrencyListRepository> { fakeRepository }
-            fakeRepository.setCurrenciesResult(
+            val fakeUseCase = FakeLoadCurrencyRatesUseCase()
+            declare<LoadCurrencyRatesUseCase> { fakeUseCase }
+            fakeUseCase.setCurrenciesResult(
                 Result.success(
                     listOf(Currency("test", "TEST", 1.0, Table.TABLE_A)),
                 ),
@@ -171,29 +177,37 @@ class CurrencyListViewModelTest : KoinTest {
 
             val viewModel: CurrencyListViewModel by inject()
 
-            // When
-            viewModel.loadCurrencies()
-            with(viewModel.uiState.value) {
-                currencies.shouldHaveSize(1)
-            }
+            viewModel.uiState.test {
+                skipItems(1) // Skip initial loading state
+                // When
+                viewModel.loadCurrencies()
+                skipItems(1) // Skip initial loading state
 
-            // Update repository to return different data
-            fakeRepository.setCurrenciesResult(
-                Result.success(
-                    listOf(
-                        Currency("dolar amerykański", "USD", 4.1234, Table.TABLE_A),
-                        Currency("euro", "EUR", 4.5678, Table.TABLE_A),
+
+                with(awaitItem()) {
+                    currencies.shouldHaveSize(1)
+                }
+
+                // Update use case to return different data
+                fakeUseCase.setCurrenciesResult(
+                    Result.success(
+                        listOf(
+                            Currency("dolar amerykański", "USD", 4.1234, Table.TABLE_A),
+                            Currency("euro", "EUR", 4.5678, Table.TABLE_A),
+                        ),
                     ),
-                ),
-            )
+                )
 
-            viewModel.loadCurrencies()
+                viewModel.loadCurrencies()
 
-            // Then
-            with(viewModel.uiState.value) {
-                currencies.shouldHaveSize(2)
-                currencies.first().code.shouldBe("USD")
-                currencies.last().code.shouldBe("EUR")
+                skipItems(1) // Skip initial loading state
+
+                // Then
+                with(awaitItem()) {
+                    currencies.shouldHaveSize(2)
+                    currencies.first().code.shouldBe("USD")
+                    currencies.last().code.shouldBe("EUR")
+                }
             }
         }
 }

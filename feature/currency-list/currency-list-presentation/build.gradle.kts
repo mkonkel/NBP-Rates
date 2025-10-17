@@ -34,6 +34,7 @@ kotlin {
             implementation(libs.kotest.assertions)
             implementation(libs.koin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
             implementation(projects.feature.currencyList.currencyListData)
         }
     }
