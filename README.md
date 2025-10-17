@@ -2,154 +2,279 @@
 
 Kotlin Multiplatform mobile application displaying currency exchange rates from the National Bank of Poland (NBP) API.
 
-## Application Overview
+## 📱 Application Overview
 
-The app provides real-time and historical exchange rate information with support for Android and iOS platforms using Jetpack Compose for UI.
+The NBP Rates app is a modern, cross-platform mobile application that provides real-time and historical exchange rate information for Polish and international currencies. Built with Kotlin Multiplatform and Jetpack Compose, it offers a clean, intuitive interface for checking current rates and analyzing historical trends.
 
-## Architecture
+**Target Platforms:**
+- ✅ **Android**: Fully functional and production-ready
+- 🚧 **iOS**: Builds successfully but requires Koin DI initialization to run
 
-The project follows **feature-specific modular architecture** with MVVM pattern and Unidirectional Data Flow (UDF):
+## 🏗️ Architecture
 
-### Core Modules
-- **`core:network`** - Shared HTTP client factory using Ktor for API communication
-- **`core:ui`** - Shared UI components and Compose utilities  
-- **`core:database`** - Shared database layer (Room/SQLite)
+This project follows **feature-specific modular architecture** with MVVM pattern and Unidirectional Data Flow (UDF):
 
-### Feature Modules
+### 🎯 Architecture Principles
+- **Feature-First Design**: Each feature has its own complete module stack
+- **Clean Architecture**: Clear separation between layers with proper boundaries
+- **MVVM + UDF**: ViewModel manages state, UI observes and reacts to changes
+- **Dependency Injection**: Koin provides testable and maintainable DI
+- **Public Interfaces, Internal Implementations**: Clean API boundaries
 
-#### `feature:currency_list` ✅ **COMPLETED**
-Displays list of available currencies with current rates:
-- **`currency-list-domain`** - Domain models (`Currency`, `CurrencyList`), repository interfaces
-- **`currency-list-network`** - NBP API integration with public `CurrencyListApi` interface + internal implementation
-- **`currency-list-data`** - Repository implementation with proper DI and error handling
-- **`currency-list-presentation`** - ViewModel with UDF state management and public `CurrencyListScreen`
-- **`currency-list-di`** - Centralized DI modules aggregating all layers
+### 📦 Module Structure
 
-#### `feature:currency_details` ✅ **COMPLETED**
-Shows detailed information and historical rates for selected currency:
-- **`currency-details-domain`** - Domain models (`CurrencyDetails`, `HistoricalRate`), repository interfaces
-- **`currency-details-network`** - Historical rate API with public `CurrencyDetailsApi` interface + internal implementation
-- **`currency-details-data`** - Repository implementation with proper DI and error handling
-- **`currency-details-presentation`** - ViewModel with UDF state management and public `CurrencyDetailsScreen`
-- **`currency-details-di`** - Centralized DI modules aggregating all layers
+```
+NBP-Rates/
+├── core/                           # Shared infrastructure
+│   ├── network/                   # HTTP client factory (Ktor)
+│   ├── ui/                        # Shared UI components & utilities
+│   └── database/                  # Database layer (Room/SQLite)
+├── feature/
+│   ├── currency_list/             # Currency listing feature
+│   │   ├── currency-list-domain/          # Domain models + repository interfaces
+│   │   ├── currency-list-network/         # NBP API integration + DTOs
+│   │   ├── currency-list-data/            # Repository implementations
+│   │   ├── currency-list-presentation/    # ViewModels + UseCases + UI
+│   │   └── currency-list-di/              # DI modules
+│   └── currency_details/          # Currency details feature
+│       ├── currency-details-domain/        # Domain models + repository interfaces
+│       ├── currency-details-network/       # Historical rates API + DTOs
+│       ├── currency-details-data/          # Repository implementations
+│       ├── currency-details-presentation/  # ViewModels + UseCases + UI
+│       └── currency-details-di/            # DI modules
+└── composeApp/                    # Main application entry point
+```
 
-### Application Module
-- **`composeApp`** - Main application entry point, platform-specific implementations, and dependency injection setup
+## 🚀 Features
 
-## Implementation Status ✅
+### 💱 Currency List (`currency_list`)
+- **Real-time Exchange Rates**: Fetch current rates from NBP Tables A and B in parallel
+- **Comprehensive Currency Coverage**: All major international currencies
+- **Loading States**: Visual feedback during data fetching
+- **Error Handling**: Graceful error handling with retry mechanisms
+- **Clean Architecture**: MVVM with proper state management
 
-Both feature modules are **fully implemented** with:
-- ✅ Complete layered architecture (API → Domain → Data → Presentation)
-- ✅ Proper visibility modifiers (public interfaces, internal implementations)
-- ✅ Dependency injection with Koin
-- ✅ Android-first KMP configuration
-- ✅ Code quality with Detekt and Spotless
-- ✅ Comprehensive unit tests with fake implementations
-- ✅ Test isolation and clean code practices
-- ✅ Buildable modules with proper dependencies
+### 📊 Currency Details (`currency_details`)
+- **Detailed Currency Information**: Comprehensive data for selected currencies
+- **Historical Rates**: Configurable historical data (default 30 days)
+- **Interactive Charts**: Visual representation of rate trends
+- **Dynamic Table Types**: Support for Tables A, B, and C
+- **Rate Highlighting**: Visual indicators for significant rate changes (10% threshold)
+- **Advanced Filtering**: Date range and table type selection
 
-## Technology Stack
+## 🔧 Technology Stack
 
-- **Kotlin Multiplatform** - Cross-platform development
-- **Jetpack Compose** - Declarative UI framework
-- **Ktor** - HTTP client for API communication
-- **Kotlinx.serialization** - JSON parsing
-- **Koin** - Dependency injection
-- **Kotest** - Modern testing framework with expressive assertions
-- **Detekt & Spotless** - Code quality and formatting
+### Core Technologies
+- **Kotlin Multiplatform**: Cross-platform development with native performance
+- **Jetpack Compose**: Modern declarative UI framework
+- **Ktor**: HTTP client for API communication with proper error handling
+- **Kotlinx.serialization**: Efficient JSON parsing and serialization
+- **Koin**: Dependency injection framework for testable architecture
 
-## Key Features
+### Testing & Quality
+- **Kotest**: Modern testing framework with expressive assertions
+- **Turbine**: Specialized library for testing StateFlow and coroutines
+- **Detekt**: Static code analysis (zero critical issues enforced)
+- **Spotless**: Consistent code formatting with ktlint
 
-### Currency List (`currency_list`)
-- Display current exchange rates from NBP Table A
-- Real-time data fetching with loading states
-- Error handling and retry mechanisms
-- Clean MVVM architecture with UDF
+### Development Tools
+- **Android Target SDK**: 36, **Min SDK**: 24
+- **iOS Targets**: arm64 and simulator arm64 (prepared)
+- **Gradle**: Build system with Kotlin DSL
 
-### Currency Details (`currency_details`)
-- Detailed currency information with current rate
-- Historical rates (configurable days, default 30)
-- Interactive charts and rate trends
-- Currency-specific data visualization
+## 🔌 NBP API Integration
 
-## NBP API Integration
+### Current Endpoints
+- **Current Rates**: `/api/exchangerates/tables/a` and `/api/exchangerates/tables/b`
+- **Historical Rates**: `/api/exchangerates/rates/a/{code}/last/{days}`
 
-The application consumes the official NBP API endpoints:
-- **Current rates**: `/api/exchangerates/tables/a` (Table A)
-- **Historical rates**: `/api/exchangerates/rates/a/{code}/last/{days}`
+### API Architecture
+- **Parallel API Calls**: Optimized performance with concurrent requests
+- **Result<T> Pattern**: Comprehensive error handling throughout the stack
+- **DTO-to-Domain Mapping**: Clean separation between API and domain models
+- **Rate Limiting Awareness**: Built with NBP API constraints in mind
 
-## Development Setup
+## 🚧 Technical Debt & Known Issues
+
+### 🔄 UseCase Architecture (High Priority)
+- **Current State**: UseCase classes temporarily placed in `presentation` layer
+- **Required Action**: Move to dedicated `use-case` layer for proper architectural separation
+- **Missing Tests**: UseCase implementations lack comprehensive unit tests
+- **Impact**: Violates clean architecture principles but doesn't affect functionality
+
+### 📱 iOS Platform Support (Medium Priority)
+- **Current State**: iOS builds successfully but won't run
+- **Missing Component**: Koin dependency injection initialization in iOS app entry point
+- **Required Action**: Add proper Koin setup in iOS main function
+- **Impact**: iOS users cannot use the application until this is resolved
+
+### 🧪 Testing Coverage
+- **ViewModel Tests**: ✅ Comprehensive coverage with fake implementations
+- **UseCase Tests**: ❌ Missing - high priority technical debt
+- **Integration Tests**: Limited due to external API dependencies
+
+## 💻 Development Setup
 
 ### Prerequisites
-- JDK 17+
-- Android Studio or IntelliJ IDEA
-- Kotlin Multiplatform plugin
+- **JDK 17+**
+- **Android Studio** or **IntelliJ IDEA** with Kotlin Multiplatform plugin
+- **Git** for version control
 
-### Build Commands
+### 🚀 Quick Start
 
-#### Android Application
+#### Clone & Build
 ```bash
-# Build debug APK
+# Clone the repository
+git clone <repository-url>
+cd NBP-Rates
+
+# Build the Android application
 ./gradlew :composeApp:assembleDebug
 
-# Run on connected device/emulator
+# Install on connected device/emulator
 ./gradlew :composeApp:installDebug
 ```
 
 #### Code Quality
 ```bash
-# Run code formatting
+# Auto-format code
 ./gradlew spotlessApply
 
 # Run static analysis
 ./gradlew detekt
+
+# Run all quality checks
+./gradlew check
 ```
 
-#### Testing
+### 🧪 Testing
+
+#### Run Tests
 ```bash
 # Run all unit tests
-./gradlew test
-
-# Run specific feature tests
 ./gradlew :feature:currency-list:currency-list-presentation:test
 ./gradlew :feature:currency-details:currency-details-presentation:test
-```
 
-#### Module-specific builds
-```bash
-# Build individual feature modules
+# Build specific modules
 ./gradlew :feature:currency-list:build
 ./gradlew :feature:currency-details:build
 ```
 
-## Project Structure
+#### Test Structure
+- **Fake Implementations**: Deterministic test data for reliable unit tests
+- **Test Isolation**: Fresh instances for each test
+- **Flow Testing**: Turbine for proper StateFlow testing
+- **Kotest Assertions**: Expressive and readable test expectations
 
+## 📋 Build Commands
+
+### Application Builds
+```bash
+# Android Debug APK
+./gradlew :composeApp:assembleDebug
+
+# Android Release APK
+./gradlew :composeApp:assembleRelease
+
+# iOS Build (requires Koin fix)
+./gradlew :composeApp:assembleDebugIosX64
+
+# Full Project Build
+./gradlew build
 ```
-feature/
-├── currency_list/
-│   ├── currency-list-domain/     # Domain models + repository interfaces
-│   ├── currency-list-network/    # API service + DTOs (public/internal)
-│   ├── currency-list-data/        # Repository implementations
-│   ├── currency-list-presentation/ # ViewModels + Compose UI
-│   └── currency-list-di/          # Centralized DI modules
-└── currency_details/
-    ├── currency-details-domain/
-    ├── currency-details-network/
-    ├── currency-details-data/
-    ├── currency-details-presentation/
-    └── currency-details-di/
+
+### Module-Specific Builds
+```bash
+# Individual feature modules
+./gradlew :feature:currency-list:build
+./gradlew :feature:currency-details:build
+
+# Specific layers
+./gradlew :feature:currency-list:currency-list-presentation:build
+./gradlew :feature:currency-details:currency-details-presentation:build
 ```
 
-## Quality Standards
+## 📏 Code Standards & Architecture Rules
 
-- **Detekt**: Zero critical issues enforced
-- **Spotless**: Consistent formatting with ktlint
-- **Architecture**: Clean separation of concerns
-- **Testing**: Repository pattern with Result<T> for error handling
-- **Test Coverage**: Unit tests with fake implementations and proper isolation
-- **Code Quality**: Use of `with()` blocks to eliminate code duplication
-- **Null Safety**: Proper null handling with `shouldNotBeNull()` instead of `!!`
+### 🏗️ Architecture Principles
+- **Feature-First Design**: Each feature is self-contained with all layers
+- **Clean Layer Separation**: Domain → Network → Data → Presentation → DI
+- **Public Interfaces**: Only expose necessary APIs between layers
+- **Internal Implementations**: Hide implementation details within modules
+- **Dependency Injection**: Use Koin for all dependency management
+- **Error Handling**: Use Result<T> pattern consistently throughout the stack
+
+### 📐 Feature Module Structure
+Each feature follows this standardized pattern:
+```
+feature/{feature-name}/
+├── {feature-name}-domain/       # Domain models + repository interfaces
+├── {feature-name}-network/      # API service + DTOs (public/internal)
+├── {feature-name}-data/         # Repository implementations
+├── {feature-name}-presentation/ # ViewModels + UseCases + UI
+└── {feature-name}-di/           # Centralized DI modules
+```
+
+### 🔧 UseCase Implementation
+- **Current Location**: Temporarily in presentation layer (technical debt)
+- **Interface**: Public visibility, defines business logic contracts
+- **Implementation**: Internal visibility, contains business logic
+- **Testing**: Must have comprehensive unit tests (currently missing)
+- **Future Goal**: Move to dedicated use-case layer
+
+### 📝 Code Quality Standards
+- **Zero Critical Issues**: Detekt static analysis enforcement
+- **Consistent Formatting**: Spotless with ktlint code formatting
+- **120 Character Line Limit**: Maintain code readability
+- **Comprehensive Documentation**: KDoc for all public APIs
+- **Test Coverage**: Fake implementations with proper test isolation
+
+### 🔄 Visibility Modifiers
+- **Public**: Interfaces, Screens, API contracts, UseCase interfaces
+- **Internal**: Implementations, ViewModels, Services, UseCase implementations
+- **Package-private**: Helper classes within same package
+
+### 🧪 Testing Standards
+- **Fake Implementations**: Use deterministic test data for reliable tests
+- **Test Isolation**: Fresh instances for each test to avoid interference
+- **Flow Testing**: Use Turbine for StateFlow and coroutine testing
+- **Assertion Style**: Kotest with expressive, readable expectations
+
+### 📋 Git Workflow
+- **Conventional Commits**: Clear, descriptive commit messages (feat:, fix:, docs:, refactor:, test:)
+- **No Co-Authored-By**: Per project configuration settings
+- **Quality Gates**: All checks (detekt, spotless, tests) must pass before merge
+- **Branch Strategy**: Feature branches for development, main for production
+
+## 🔍 Current Implementation Status
+
+### ✅ Completed Features
+- **Currency List Module**: Full implementation with parallel API calls
+- **Currency Details Module**: Complete with historical data and charts
+- **Core Infrastructure**: Network factory, DI setup, quality tools
+- **Architecture**: Feature-specific modular pattern established
+- **Testing Framework**: Comprehensive unit tests with fake implementations
+- **Code Quality**: Clean code practices with proper tooling
+
+### 🎯 Next Steps
+1. **Create UseCase Layer**: Move UseCases to dedicated architectural layer
+2. **Add UseCase Tests**: Comprehensive unit test coverage for all UseCases
+3. **Fix iOS Support**: Implement Koin initialization for iOS platform
+4. **Enhance Testing**: Add integration tests with proper mocking
+
+## 📞 Support & Contributing
+
+### Getting Help
+- Check existing documentation and code comments
+- Review test files for usage patterns
+- Follow established architectural patterns
+
+### Contributing Guidelines
+- Follow feature-specific architecture
+- Maintain code quality standards
+- Add comprehensive tests for new features
+- Update documentation for API changes
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
+**Built with ❤️ using Kotlin Multiplatform and Jetpack Compose**
