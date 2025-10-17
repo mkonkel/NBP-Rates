@@ -9,6 +9,7 @@ import kotlin.math.abs
  * Use case implementation for loading currency details with highlighting logic.
  * Handles repository communication and applies business rules for highlighting historical rates.
  * TODO: This should be moved to a separate use case layer, but keeping it in presentation for now.
+ * TODO: Missing tests for this class.
  */
 internal class LoadCurrencyDetailsUseCaseImpl(
     private val currencyDetailsRepository: CurrencyDetailsRepository,

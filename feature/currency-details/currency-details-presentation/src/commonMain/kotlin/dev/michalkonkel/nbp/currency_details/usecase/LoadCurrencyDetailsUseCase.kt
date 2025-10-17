@@ -7,6 +7,7 @@ import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
  * Use case interface for loading currency details with highlighting logic.
  * Defines the contract for loading and processing currency details data.
  * TODO: This should be moved to a separate use case layer, but keeping it in presentation for now.
+ * TODO: Missing tests for this class.
  */
 interface LoadCurrencyDetailsUseCase {
     /**

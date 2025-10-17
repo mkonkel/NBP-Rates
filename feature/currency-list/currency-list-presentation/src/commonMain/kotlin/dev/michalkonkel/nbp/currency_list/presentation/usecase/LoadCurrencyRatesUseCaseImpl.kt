@@ -10,6 +10,7 @@ import kotlinx.coroutines.coroutineScope
 /**
  * Use case implementation for loading currency rates from tables A and B in parallel.
  * TODO: This should be moved to a separate use case layer, but keeping it in presentation for now.
+ * TODO: Missing tests for this class.
  */
 internal class LoadCurrencyRatesUseCaseImpl(
     private val currencyListRepository: CurrencyListRepository,
