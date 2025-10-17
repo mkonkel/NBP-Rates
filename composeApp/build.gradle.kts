@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -14,17 +13,17 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -42,13 +41,13 @@ kotlin {
             implementation(projects.core.network)
             implementation(projects.domain)
         }
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
         }
-        
+
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
@@ -88,4 +87,3 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

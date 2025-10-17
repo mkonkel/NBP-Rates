@@ -9,7 +9,7 @@ import pl.nbp.api.models.TableDto
 /**
  * API service for communicating with NBP (Narodowy Bank Polski) exchange rate API.
  * Provides methods to fetch current and historical exchange rate data.
- * 
+ *
  * @property HttpClient Configured HTTP client for making API requests
  */
 class NbpApiService(private val httpClient: HttpClient) {
@@ -19,7 +19,7 @@ class NbpApiService(private val httpClient: HttpClient) {
 
     /**
      * Fetches current exchange rates table from NBP API.
-     * 
+     *
      * @param table NBP table type ("A", "B", or "C")
      * @return List of TableDto containing exchange rate data
      * @throws Exception on network or API errors
@@ -30,13 +30,16 @@ class NbpApiService(private val httpClient: HttpClient) {
 
     /**
      * Fetches historical exchange rates for a specific currency.
-     * 
+     *
      * @param code ISO 4217 currency code (e.g., "USD", "EUR")
      * @param days Number of recent days to fetch (max 255)
      * @return CurrencyRateDto containing historical rates data
      * @throws Exception on network or API errors
      */
-    suspend fun getCurrencyRatesLastDays(code: String, days: Int): CurrencyRateDto {
+    suspend fun getCurrencyRatesLastDays(
+        code: String,
+        days: Int,
+    ): CurrencyRateDto {
         return httpClient.get("${BASE_URL}exchangerates/rates/a/$code/last/$days").body()
     }
 }
