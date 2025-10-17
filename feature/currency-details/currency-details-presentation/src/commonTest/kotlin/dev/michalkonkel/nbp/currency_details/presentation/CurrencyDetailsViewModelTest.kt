@@ -1,7 +1,7 @@
 package dev.michalkonkel.nbp.currency_details.presentation
 
 import dev.michalkonkel.nbp.core.domain.Table
-import dev.michalkonkel.nbp.currency_details.domain.usecase.LoadCurrencyDetailsUseCase
+import dev.michalkonkel.nbp.currency_details.usecase.LoadCurrencyDetailsUseCase
 import dev.michalkonkel.nbp.currency_details.presentation.di.currencyDetailsPresentationModule
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -52,8 +52,8 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails should update state with data when repository succeeds`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
@@ -81,8 +81,8 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails should update state with error when repository fails`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyDetailsRepository.createError()
-            declare<CurrencyDetailsRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase.createError()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
@@ -100,12 +100,12 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails should handle empty result`() =
         runTest {
             // Given
-            val emptyRepo = FakeCurrencyDetailsRepository.createEmpty()
-            val fakeRepository = FakeCurrencyDetailsRepository()
+            val emptyUseCase = FakeLoadCurrencyDetailsUseCase.createEmpty()
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
 
-            declare<CurrencyDetailsRepository> { fakeRepository }
-            fakeRepository.setCurrencyDetailsResult(
-                Result.success(emptyRepo.currencyDetails!!),
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
+            fakeUseCase.setCurrencyDetailsResult(
+                Result.success(emptyUseCase.currencyDetails!!),
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
@@ -127,8 +127,8 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `clearError should clear error state`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyDetailsRepository.createError()
-            declare<CurrencyDetailsRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase.createError()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
             viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
@@ -143,11 +143,11 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails should set loading to true during execution`() =
         runTest {
             // Given
-            val eurRepo = FakeCurrencyDetailsRepository.createEUR()
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
-            fakeRepository.setCurrencyDetailsResult(
-                Result.success(eurRepo.currencyDetails!!),
+            val eurUseCase = FakeLoadCurrencyDetailsUseCase.createEUR()
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
+            fakeUseCase.setCurrencyDetailsResult(
+                Result.success(eurUseCase.currencyDetails!!),
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
@@ -164,8 +164,8 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails with different days parameter`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
@@ -185,11 +185,11 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `loadCurrencyDetails with EUR should return EUR specific data`() =
         runTest {
             // Given
-            val eurRepo = FakeCurrencyDetailsRepository.createEUR()
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
-            fakeRepository.setCurrencyDetailsResult(
-                Result.success(eurRepo.currencyDetails!!),
+            val eurUseCase = FakeLoadCurrencyDetailsUseCase.createEUR()
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
+            fakeUseCase.setCurrencyDetailsResult(
+                Result.success(eurUseCase.currencyDetails!!),
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
@@ -214,11 +214,11 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `multiple loadCurrencyDetails calls should update state correctly`() =
         runTest {
             // Given
-            val eurRepo = FakeCurrencyDetailsRepository.createEUR()
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
-            fakeRepository.setCurrencyDetailsResult(
-                Result.success(eurRepo.currencyDetails!!),
+            val eurUseCase = FakeLoadCurrencyDetailsUseCase.createEUR()
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
+            fakeUseCase.setCurrencyDetailsResult(
+                Result.success(eurUseCase.currencyDetails!!),
             )
             val viewModel: CurrencyDetailsViewModel by inject()
 
@@ -228,10 +228,10 @@ class CurrencyDetailsViewModelTest : KoinTest {
                 code.shouldBe("EUR")
             }
 
-            // Update repository to return USD data
-            fakeRepository.setCurrencyDetailsResult(
+            // Update use case to return USD data
+            fakeUseCase.setCurrencyDetailsResult(
                 Result.success(
-                    FakeCurrencyDetailsRepository().currencyDetails!!,
+                    FakeLoadCurrencyDetailsUseCase().currencyDetails!!,
                 ),
             )
 

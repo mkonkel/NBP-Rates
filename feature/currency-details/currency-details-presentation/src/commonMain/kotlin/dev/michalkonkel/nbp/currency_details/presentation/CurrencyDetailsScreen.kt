@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.michalkonkel.nbp.core.domain.Table
@@ -125,25 +126,27 @@ private fun CurrencyInfoCard(currencyDetails: CurrencyDetails) {
 @Composable
 private fun HistoricalRateItem(rate: HistoricalRate) {
     Card(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
         ) {
+            val color = if (rate.isHighlighted) {
+                Color.Red
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            }
+
             Text(
                 text = rate.effectiveDate,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
+                color = color
             )
             Text(
                 text = "Rate: ${rate.rate}",
                 style = MaterialTheme.typography.bodySmall,
-                color =
-                    if (rate.isHighlighted) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
+                color = color
             )
         }
     }

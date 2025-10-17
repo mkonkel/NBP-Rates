@@ -2,39 +2,39 @@ package dev.michalkonkel.nbp.currency_details.presentation
 
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
-import dev.michalkonkel.nbp.currency_details.domain.usecase.LoadCurrencyDetailsUseCase
+import dev.michalkonkel.nbp.currency_details.domain.HistoricalRate
+import dev.michalkonkel.nbp.currency_details.usecase.LoadCurrencyDetailsUseCase
 
 /**
  * Fake implementation of LoadCurrencyDetailsUseCase for testing purposes.
  * Provides static test data that can be controlled in unit tests.
  */
 class FakeLoadCurrencyDetailsUseCase(
-    private var detailsResult: Result<CurrencyDetails> =
-        Result.success(
-            CurrencyDetails(
-                name = "dolar amerykański",
-                code = "USD",
-                currentRate = 4.1234,
-                table = Table.TABLE_A,
-                effectiveDate = "2024-01-15",
-                historicalRates =
-                    listOf(
-                        dev.michalkonkel.nbp.currency_details.domain.HistoricalRate("2024-01-15", 4.1234, false),
-                        dev.michalkonkel.nbp.currency_details.domain.HistoricalRate("2024-01-14", 4.1156, false),
-                        dev.michalkonkel.nbp.currency_details.domain.HistoricalRate("2024-01-13", 4.1098, false),
-                        dev.michalkonkel.nbp.currency_details.domain.HistoricalRate("2024-01-12", 4.1234, false),
-                        dev.michalkonkel.nbp.currency_details.domain.HistoricalRate("2024-01-11", 4.1345, false),
-                    ),
-            ),
+    private var detailsResult: Result<CurrencyDetails> = Result.success(
+        CurrencyDetails(
+            name = "dolar amerykański",
+            code = "USD",
+            currentRate = 4.1234,
+            table = Table.TABLE_A,
+            effectiveDate = "2024-01-15",
+            historicalRates =
+                listOf(
+                    HistoricalRate("2024-01-15", 4.1234, false),
+                    HistoricalRate("2024-01-14", 4.1156, false),
+                    HistoricalRate("2024-01-13", 4.1098, false),
+                    HistoricalRate("2024-01-12", 4.1234, false),
+                    HistoricalRate("2024-01-11", 4.1345, false),
+                )
         ),
+    ),
 ) : LoadCurrencyDetailsUseCase {
     val currencyDetails: CurrencyDetails?
         get() = detailsResult.getOrNull()
 
-    override suspend operator fun invoke(
+    override suspend fun invoke(
         code: String,
         table: Table,
-        days: Int,
+        days: Int
     ): Result<CurrencyDetails> {
         return detailsResult
     }
@@ -78,17 +78,17 @@ class FakeLoadCurrencyDetailsUseCase(
                         effectiveDate = "2024-01-15",
                         historicalRates =
                             listOf(
-                                dev.michalkonkel.nbp.currency_details.domain.HistoricalRate(
+                                HistoricalRate(
                                     "2024-01-15",
                                     4.5678,
                                     false,
                                 ),
-                                dev.michalkonkel.nbp.currency_details.domain.HistoricalRate(
+                                HistoricalRate(
                                     "2024-01-14",
                                     4.5523,
                                     false,
                                 ),
-                                dev.michalkonkel.nbp.currency_details.domain.HistoricalRate(
+                                HistoricalRate(
                                     "2024-01-13",
                                     4.5432,
                                     false,
@@ -97,5 +97,6 @@ class FakeLoadCurrencyDetailsUseCase(
                     ),
                 ),
             )
+
     }
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
-import dev.michalkonkel.nbp.currency_details.domain.usecase.LoadCurrencyDetailsUseCase
+import dev.michalkonkel.nbp.currency_details.usecase.LoadCurrencyDetailsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

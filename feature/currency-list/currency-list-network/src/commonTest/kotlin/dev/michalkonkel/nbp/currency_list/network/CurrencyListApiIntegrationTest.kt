@@ -41,21 +41,24 @@ class CurrencyListApiIntegrationTest : KoinTest {
             // When - Test JSON serialization with shouldNotThrowAny
             // This tests if the API call and JSON serialization works without throwing serialization exceptions
             shouldNotThrowAny {
-                val result = api.getCurrentRates()
+                val result = api.getCurrentRates("A")
 
                 // Then - Verify that JSON serialization worked and we got a TableDto
-                result.rates.shouldNotBeEmpty()
+                result.shouldNotBeEmpty()
 
-                val firstCurrency = result.rates.first()
+                val firstTable = result.first()
+                firstTable.rates.shouldNotBeEmpty()
+
+                val firstCurrency = firstTable.rates.first()
                 firstCurrency.currency.shouldBe("dolar amerykański")
                 firstCurrency.code.shouldBe("USD")
                 firstCurrency.mid.shouldNotBeNull()
                 firstCurrency.mid.shouldBeGreaterThan(0.0)
 
                 // Verify table metadata
-                result.table.shouldBe("A")
-                result.effectiveDate.shouldNotBeBlank()
-                result.no.shouldNotBeBlank()
+                firstTable.table.shouldBe("A")
+                firstTable.effectiveDate.shouldNotBeBlank()
+                firstTable.no.shouldNotBeBlank()
             }
         }
 
@@ -66,19 +69,20 @@ class CurrencyListApiIntegrationTest : KoinTest {
 
             // When - Test JSON serialization with shouldNotThrowAny
             shouldNotThrowAny {
-                val result = api.getCurrentRates()
+                val result = api.getCurrentRates("A")
 
                 // Then - Verify that all table fields are properly serialized
-                result.table.shouldNotBeNull()
-                result.table.shouldBe("A")
-                result.no.shouldNotBeNull()
-                result.no.shouldNotBeBlank()
-                result.effectiveDate.shouldNotBeNull()
-                result.effectiveDate.shouldNotBeBlank()
-                result.rates.shouldNotBeNull()
+                val firstTable = result.first()
+                firstTable.table.shouldNotBeNull()
+                firstTable.table.shouldBe("A")
+                firstTable.no.shouldNotBeNull()
+                firstTable.no.shouldNotBeBlank()
+                firstTable.effectiveDate.shouldNotBeNull()
+                firstTable.effectiveDate.shouldNotBeBlank()
+                firstTable.rates.shouldNotBeNull()
 
                 // Verify all currency fields are properly serialized
-                result.rates.forEach { currency ->
+                firstTable.rates.forEach { currency ->
                     currency.currency.shouldNotBeNull()
                     currency.currency.shouldNotBeBlank()
                     currency.code.shouldNotBeNull()

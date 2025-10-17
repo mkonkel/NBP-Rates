@@ -1,4 +1,4 @@
-package dev.michalkonkel.nbp.currency_details.domain.usecase
+package dev.michalkonkel.nbp.currency_details.usecase
 
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
@@ -8,6 +8,7 @@ import kotlin.math.abs
 /**
  * Use case implementation for loading currency details with highlighting logic.
  * Handles repository communication and applies business rules for highlighting historical rates.
+ * TODO: This should be moved to a separate use case layer, but keeping it in presentation for now.
  */
 internal class LoadCurrencyDetailsUseCaseImpl(
     private val currencyDetailsRepository: CurrencyDetailsRepository,

@@ -1,4 +1,4 @@
-package dev.michalkonkel.nbp.currency_details.domain.usecase
+package dev.michalkonkel.nbp.currency_details.usecase
 
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
@@ -6,6 +6,7 @@ import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 /**
  * Use case interface for loading currency details with highlighting logic.
  * Defines the contract for loading and processing currency details data.
+ * TODO: This should be moved to a separate use case layer, but keeping it in presentation for now.
  */
 interface LoadCurrencyDetailsUseCase {
     /**
