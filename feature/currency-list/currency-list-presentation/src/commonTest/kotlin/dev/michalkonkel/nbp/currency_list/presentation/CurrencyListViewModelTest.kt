@@ -20,18 +20,11 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 class CurrencyListViewModelTest : KoinTest {
-
-    private val viewModel: CurrencyListViewModel by inject()
-    private lateinit var fakeRepository: FakeCurrencyListRepository
-
     @BeforeTest
     fun setup() {
-        fakeRepository = FakeCurrencyListRepository()
-
         startKoin {
             modules(currencyListPresentationModule)
         }
-        declare<CurrencyListRepository> { fakeRepository }
     }
 
     @AfterTest
@@ -41,61 +34,92 @@ class CurrencyListViewModelTest : KoinTest {
 
     @Test
     fun `initial state should be loading with empty currencies`() = runTest {
-        // Then
-        viewModel.uiState.value.isLoading.shouldBe(true)
-        viewModel.uiState.value.currencies.shouldBeEmpty()
-        viewModel.uiState.value.error.shouldBeNull()
+        // Given - declare repository before creating ViewModel
+        val fakeRepository = FakeCurrencyListRepository()
+        declare<CurrencyListRepository> { fakeRepository }
+
+        // When - creating ViewModel (which calls loadCurrencies() in init)
+        val viewModel: CurrencyListViewModel by inject()
+
+        // Then - should be in loading state initially
+        with(viewModel.uiState.value) {
+            isLoading.shouldBe(true)
+            currencies.shouldBeEmpty()
+            error.shouldBeNull()
+        }
     }
 
     @Test
     fun `loadCurrencies should update state with data when repository succeeds`() = runTest {
+        // Given
+        val fakeRepository = FakeCurrencyListRepository()
+        declare<CurrencyListRepository> { fakeRepository }
+
+        val viewModel: CurrencyListViewModel by inject()
+
         // When
         viewModel.loadCurrencies()
 
         // Then
-        viewModel.uiState.value.isLoading.shouldBe(false)
-        viewModel.uiState.value.currencies.shouldHaveSize(3)
-        viewModel.uiState.value.currencies.first().code.shouldBe("USD")
-        viewModel.uiState.value.currencies.first().name.shouldBe("dolar amerykański")
-        viewModel.uiState.value.currencies.first().currentRate.shouldBe(4.1234)
-        viewModel.uiState.value.currencies.first().table.shouldBe(Table.TABLE_A)
-        viewModel.uiState.value.error.shouldBeNull()
+        with(viewModel.uiState.value) {
+            isLoading.shouldBe(false)
+            currencies.shouldHaveSize(3)
+            with(currencies.first()) {
+                code.shouldBe("USD")
+                name.shouldBe("dolar amerykański")
+                currentRate.shouldBe(4.1234)
+                table.shouldBe(Table.TABLE_A)
+            }
+            error.shouldBeNull()
+        }
     }
 
     @Test
     fun `loadCurrencies should update state with error when repository fails`() = runTest {
         // Given
-        fakeRepository.setCurrenciesResult(Result.failure(Exception("Network error")))
+        val fakeRepository = FakeCurrencyListRepository.createError()
+        declare<CurrencyListRepository> { fakeRepository }
+
+        val viewModel: CurrencyListViewModel by inject()
 
         // When
         viewModel.loadCurrencies()
 
         // Then
-        viewModel.uiState.value.isLoading.shouldBe(false)
-        viewModel.uiState.value.currencies.shouldBeEmpty()
-        viewModel.uiState.value.error.shouldBe("Network error")
+        with(viewModel.uiState.value) {
+            isLoading.shouldBe(false)
+            currencies.shouldBeEmpty()
+            error.shouldBe("Network error")
+        }
     }
 
     @Test
     fun `loadCurrencies should handle empty result`() = runTest {
         // Given
-        fakeRepository = FakeCurrencyListRepository()
-        fakeRepository.setCurrenciesResult(Result.success(emptyList()))
+        val fakeRepository = FakeCurrencyListRepository.createEmpty()
+        declare<CurrencyListRepository> { fakeRepository }
+
+        val viewModel: CurrencyListViewModel by inject()
 
         // When
         viewModel.loadCurrencies()
 
         // Then
-        viewModel.uiState.value.isLoading.shouldBe(false)
-        viewModel.uiState.value.currencies.shouldBeEmpty()
-        viewModel.uiState.value.error.shouldBeNull()
+        with(viewModel.uiState.value) {
+            isLoading.shouldBe(false)
+            currencies.shouldBeEmpty()
+            error.shouldBeNull()
+        }
     }
 
     @Test
     fun `clearError should clear error state`() = runTest {
         // Given
-        fakeRepository = FakeCurrencyListRepository()
-        fakeRepository.setCurrenciesResult(Result.failure(Exception("Test error")))
+        val fakeRepository = FakeCurrencyListRepository.createError()
+        declare<CurrencyListRepository> { fakeRepository }
+
+        val viewModel: CurrencyListViewModel by inject()
+
         viewModel.loadCurrencies()
 
         // When
@@ -108,12 +132,15 @@ class CurrencyListViewModelTest : KoinTest {
     @Test
     fun `loadCurrencies should set loading to true during execution`() = runTest {
         // Given
-        fakeRepository = FakeCurrencyListRepository()
+        val fakeRepository = FakeCurrencyListRepository()
         fakeRepository.setCurrenciesResult(
             Result.success(
                 listOf(Currency("test", "TEST", 1.0, Table.TABLE_A))
             )
         )
+        declare<CurrencyListRepository> { fakeRepository }
+
+        val viewModel: CurrencyListViewModel by inject()
 
         // When
         shouldNotThrowAny {
@@ -127,16 +154,21 @@ class CurrencyListViewModelTest : KoinTest {
     @Test
     fun `multiple loadCurrencies calls should update state correctly`() = runTest {
         // Given
-        fakeRepository = FakeCurrencyListRepository()
+        val fakeRepository = FakeCurrencyListRepository()
+        declare<CurrencyListRepository> { fakeRepository }
         fakeRepository.setCurrenciesResult(
             Result.success(
                 listOf(Currency("test", "TEST", 1.0, Table.TABLE_A))
             )
         )
 
+        val viewModel: CurrencyListViewModel by inject()
+
         // When
         viewModel.loadCurrencies()
-        viewModel.uiState.value.currencies.shouldHaveSize(1)
+        with(viewModel.uiState.value) {
+            currencies.shouldHaveSize(1)
+        }
 
         // Update repository to return different data
         fakeRepository.setCurrenciesResult(
@@ -151,8 +183,10 @@ class CurrencyListViewModelTest : KoinTest {
         viewModel.loadCurrencies()
 
         // Then
-        viewModel.uiState.value.currencies.shouldHaveSize(2)
-        viewModel.uiState.value.currencies.first().code.shouldBe("USD")
-        viewModel.uiState.value.currencies.last().code.shouldBe("EUR")
+        with(viewModel.uiState.value) {
+            currencies.shouldHaveSize(2)
+            currencies.first().code.shouldBe("USD")
+            currencies.last().code.shouldBe("EUR")
+        }
     }
 }
