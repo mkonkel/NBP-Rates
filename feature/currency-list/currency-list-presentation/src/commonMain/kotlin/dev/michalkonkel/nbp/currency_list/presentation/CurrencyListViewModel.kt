@@ -3,7 +3,7 @@ package dev.michalkonkel.nbp.currency_list.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.michalkonkel.nbp.currency_list.domain.Currency
-import dev.michalkonkel.nbp.currency_list.domain.CurrencyListRepository
+import dev.michalkonkel.nbp.currency_list.presentation.usecase.LoadCurrencyRatesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,10 +22,10 @@ data class CurrencyListUiState(
  * ViewModel for managing currency list screen state.
  * Implements MVVM with Unidirectional Data Flow.
  *
- * @param repository Repository for fetching currency data
+ * @param loadCurrencyRatesUseCase Use case for loading currency rates from tables A and B in parallel
  */
 internal class CurrencyListViewModel(
-    private val repository: CurrencyListRepository,
+    private val loadCurrencyRatesUseCase: LoadCurrencyRatesUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CurrencyListUiState())
     val uiState: StateFlow<CurrencyListUiState> = _uiState.asStateFlow()
@@ -35,18 +35,17 @@ internal class CurrencyListViewModel(
     }
 
     /**
-     * Loads currencies from repository and updates UI state.
+     * Loads currencies using use case that makes parallel API calls to tables A and B.
      */
     fun loadCurrencies() {
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
         viewModelScope.launch {
-            repository.getCurrentRates()
-                .onSuccess { rateTable ->
+            loadCurrencyRatesUseCase()
+                .onSuccess { currencies ->
                     _uiState.value =
                         _uiState.value.copy(
-                            currencies = rateTable.first().rates,
-                            // TODO: fix me!
+                            currencies = currencies,
                             isLoading = false,
                             error = null,
                         )

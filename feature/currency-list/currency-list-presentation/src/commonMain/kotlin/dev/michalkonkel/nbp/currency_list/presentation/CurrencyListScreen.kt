@@ -51,7 +51,10 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
             else -> {
                 LazyColumn {
                     items(state.currencies) { currency ->
-                        CurrencyItem(currency = currency)
+                        CurrencyItem(
+                            currency = currency,
+                            onCurrencyClick = { /* TODO: Navigate to currency details */ },
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -61,7 +64,10 @@ fun CurrencyListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CurrencyItem(currency: Currency) {
+private fun CurrencyItem(
+    currency: Currency,
+    onCurrencyClick: (String) -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxSize(),
     ) {

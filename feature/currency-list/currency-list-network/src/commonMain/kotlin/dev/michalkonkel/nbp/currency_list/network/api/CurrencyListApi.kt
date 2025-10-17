@@ -8,7 +8,8 @@ import dev.michalkonkel.nbp.currency_list.network.models.TableDto
  */
 interface CurrencyListApi {
     /**
-     * Fetches current exchange rates table from NBP API.
+     * Fetches current exchange rates table from NBP API for specified table type.
+     * @param tableType The table type ("a", "b", or "c")
      */
-    suspend fun getCurrentRates(): List<TableDto>
+    suspend fun getCurrentRates(tableType: String): List<TableDto>
 }
