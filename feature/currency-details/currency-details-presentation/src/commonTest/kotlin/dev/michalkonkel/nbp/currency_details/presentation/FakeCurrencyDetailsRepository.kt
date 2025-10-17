@@ -28,6 +28,9 @@ class FakeCurrencyDetailsRepository(
     )
 ) : CurrencyDetailsRepository {
 
+    val currencyDetails: CurrencyDetails?
+        get() = detailsResult.getOrNull()
+
     override suspend fun getCurrencyDetails(
         code: String,
         days: Int,
