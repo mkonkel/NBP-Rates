@@ -17,6 +17,8 @@ internal object CurrencyDetailsMapper {
         HistoricalRate(
             effectiveDate = rate.effectiveDate,
             rate = rate.mid,
+            // Default value, will be set by UseCase
+            isHighlighted = false,
         )
 
     /**

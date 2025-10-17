@@ -1,7 +1,7 @@
 package dev.michalkonkel.nbp.currency_details.presentation
 
 import dev.michalkonkel.nbp.core.domain.Table
-import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
+import dev.michalkonkel.nbp.currency_details.domain.usecase.LoadCurrencyDetailsUseCase
 import dev.michalkonkel.nbp.currency_details.presentation.di.currencyDetailsPresentationModule
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -36,8 +36,8 @@ class CurrencyDetailsViewModelTest : KoinTest {
     fun `initial state should be not loading with null currency details`() =
         runTest {
             // Given
-            val fakeRepository = FakeCurrencyDetailsRepository()
-            declare<CurrencyDetailsRepository> { fakeRepository }
+            val fakeUseCase = FakeLoadCurrencyDetailsUseCase()
+            declare<LoadCurrencyDetailsUseCase> { fakeUseCase }
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // Then

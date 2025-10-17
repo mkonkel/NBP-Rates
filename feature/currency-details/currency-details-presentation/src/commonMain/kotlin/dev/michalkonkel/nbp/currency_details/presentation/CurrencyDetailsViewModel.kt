@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
-import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
+import dev.michalkonkel.nbp.currency_details.domain.usecase.LoadCurrencyDetailsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,10 +23,10 @@ data class CurrencyDetailsUiState(
  * ViewModel for managing currency details screen state.
  * Implements MVVM with Unidirectional Data Flow.
  *
- * @param repository Repository for fetching currency details data
+ * @param loadCurrencyDetailsUseCase Use case for loading currency details with highlighting
  */
 internal class CurrencyDetailsViewModel(
-    private val repository: CurrencyDetailsRepository,
+    private val loadCurrencyDetailsUseCase: LoadCurrencyDetailsUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CurrencyDetailsUiState())
     val uiState: StateFlow<CurrencyDetailsUiState> = _uiState.asStateFlow()
@@ -42,7 +42,7 @@ internal class CurrencyDetailsViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            repository.getCurrencyDetails(code, table, days)
+            loadCurrencyDetailsUseCase(code, table, days)
                 .onSuccess { details ->
                     _uiState.value =
                         _uiState.value.copy(

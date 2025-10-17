@@ -20,6 +20,7 @@ data class CurrencyDetails(
 data class HistoricalRate(
     val effectiveDate: String,
     val rate: Double,
+    val isHighlighted: Boolean = false,
 )
 
 /**

@@ -138,7 +138,12 @@ private fun HistoricalRateItem(rate: HistoricalRate) {
             Text(
                 text = "Rate: ${rate.rate}",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color =
+                    if (rate.isHighlighted) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
             )
         }
     }
