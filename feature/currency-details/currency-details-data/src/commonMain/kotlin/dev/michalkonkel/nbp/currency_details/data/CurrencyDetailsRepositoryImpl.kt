@@ -2,6 +2,7 @@ package dev.michalkonkel.nbp.currency_details.data
 
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
+import dev.michalkonkel.nbp.currency_details.domain.HistoricalRate
 import dev.michalkonkel.nbp.currency_details.network.api.CurrencyDetailsApi
 
 internal class CurrencyDetailsRepositoryImpl(
@@ -14,7 +15,19 @@ internal class CurrencyDetailsRepositoryImpl(
         return try {
             val result =
                 currencyDetailsApi.getCurrencyRatesLastDays(code, days).let { dto ->
-                    TODO("Mapping not implemented")
+                    CurrencyDetails(
+                        name = dto.currency,
+                        code = dto.code,
+                        currentRate = dto.rates.firstOrNull()?.mid ?: 0.0,
+                        table = dto.table,
+                        effectiveDate = dto.rates.firstOrNull()?.effectiveDate ?: "",
+                        historicalRates = dto.rates.map { rate ->
+                            HistoricalRate(
+                                effectiveDate = rate.effectiveDate,
+                                rate = rate.mid
+                            )
+                        }
+                    )
                 }
             Result.success(result)
         } catch (e: Exception) {
