@@ -168,7 +168,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
         with(viewModel.uiState.value) {
             isLoading.shouldBe(false)
             currencyDetails.shouldNotBeNull()
-            currencyDetails!!.historicalRates.shouldHaveSize(5) // Fake repo returns 5 rates regardless of days parameter
+            currencyDetails.historicalRates.shouldHaveSize(5) // Fake repo returns 5 rates regardless of days parameter
             error.shouldBeNull()
         }
     }
