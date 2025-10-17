@@ -1,16 +1,53 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# NBP Rates
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Kotlin Multiplatform mobile application displaying currency exchange rates from the National Bank of Poland (NBP) API.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Application Overview
+
+The app provides real-time and historical exchange rate information with support for Android and iOS platforms using Jetpack Compose for UI.
+
+## Architecture
+
+The project follows **feature-specific modular architecture** with MVVM pattern and Unidirectional Data Flow (UDF):
+
+### Core Modules
+- **`core:network`** - Shared HTTP client factory using Ktor for API communication
+- **`core:ui`** - Shared UI components and Compose utilities
+- **`core:database`** - Shared database layer (Room/SQLite)
+
+### Feature Modules
+
+#### `feature:currency_list`
+Displays list of available currencies with current rates:
+- **`currency-list-domain`** - Domain models, repository interfaces, business logic
+- **`currency-list-network`** - NBP API integration and data transfer objects  
+- **`currency-list-data`** - Repository implementations connecting network to domain
+- **`currency-list-presentation`** - ViewModels and Compose UI screens
+
+#### `feature:currency_details` 
+Shows detailed information and historical rates for selected currency:
+- **`currency-details-domain`** - Domain models and repository interfaces
+- **`currency-details-network`** - Historical rate API integration
+- **`currency-details-data`** - Repository implementations
+- **`currency-details-presentation`** - ViewModels and detail screens
+
+### Application Module
+- **`composeApp`** - Main application entry point, platform-specific implementations, and dependency injection setup
+
+## Technology Stack
+
+- **Kotlin Multiplatform** - Cross-platform development
+- **Jetpack Compose** - Declarative UI framework
+- **Ktor** - HTTP client for API communication
+- **Kotlinx.serialization** - JSON parsing
+- **Koin** - Dependency injection
+- **Detekt & Spotless** - Code quality and formatting
+
+## NBP API Integration
+
+The application consumes the official NBP API endpoints:
+- Current exchange rates (`/api/exchangerates/tables/{table}`)
+- Historical rates and currency details
 
 ### Build and Run Android Application
 
