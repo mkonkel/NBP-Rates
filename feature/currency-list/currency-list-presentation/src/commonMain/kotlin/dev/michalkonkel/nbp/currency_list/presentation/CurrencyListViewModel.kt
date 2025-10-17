@@ -2,6 +2,7 @@ package dev.michalkonkel.nbp.currency_list.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.michalkonkel.nbp.currency_list.domain.Currency
 import dev.michalkonkel.nbp.currency_list.domain.CurrencyListRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
  * UI state for currency list screen following UDF pattern.
  */
 data class CurrencyListUiState(
-    val currencies: List<dev.michalkonkel.nbp.currency_list.domain.Currency> = emptyList(),
+    val currencies: List<Currency> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
 )
@@ -23,7 +24,7 @@ data class CurrencyListUiState(
  *
  * @param repository Repository for fetching currency data
  */
-class CurrencyListViewModel(
+internal class CurrencyListViewModel(
     private val repository: CurrencyListRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CurrencyListUiState())

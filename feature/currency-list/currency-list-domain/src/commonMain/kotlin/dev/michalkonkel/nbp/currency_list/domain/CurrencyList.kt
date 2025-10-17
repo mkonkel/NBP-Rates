@@ -18,10 +18,3 @@ data class Currency(
     val currentRate: Double,
     val table: String,
 )
-
-/**
- * Repository interface for currency list data.
- */
-interface CurrencyListRepository {
-    suspend fun getCurrencies(): Result<List<Currency>>
-}

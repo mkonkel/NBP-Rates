@@ -16,6 +16,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            implementation(projects.feature.currencyList.currencyListDomain)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -25,6 +26,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
         androidUnitTest.dependencies {
             implementation(libs.kotlin.test)
