@@ -41,11 +41,11 @@ internal class CurrencyListViewModel(
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
         viewModelScope.launch {
-            repository.getCurrencies()
-                .onSuccess { currencies ->
+            repository.getCurrentRates()
+                .onSuccess { rateTable ->
                     _uiState.value =
                         _uiState.value.copy(
-                            currencies = currencies,
+                            currencies = rateTable.first().rates, //TDOD fixme!
                             isLoading = false,
                             error = null,
                         )

@@ -35,7 +35,7 @@ class CurrencyListApiIntegrationTest : KoinTest {
     }
 
     @Test
-    fun `getCurrentRates should make real API call and return serialized data`() = runTest {
+    fun `getCurrentRates should return TableDto with rates list`() = runTest {
         // Given - API instance injected by Koin
 
         // When - Test JSON serialization with shouldNotThrowAny
@@ -43,29 +43,41 @@ class CurrencyListApiIntegrationTest : KoinTest {
         shouldNotThrowAny {
             val result = api.getCurrentRates()
 
-            // Then - Verify that JSON serialization worked and we got data
-            result.shouldNotBeEmpty()
+            // Then - Verify that JSON serialization worked and we got a TableDto
+            result.rates.shouldNotBeEmpty()
 
-            val firstCurrency = result.first()
+            val firstCurrency = result.rates.first()
             firstCurrency.currency.shouldBe("dolar amerykański")
             firstCurrency.code.shouldBe("USD")
             firstCurrency.mid.shouldNotBeNull()
             firstCurrency.mid.shouldBeGreaterThan(0.0)
+            
+            // Verify table metadata
+            result.table.shouldBe("A")
+            result.effectiveDate.shouldNotBeBlank()
+            result.no.shouldNotBeBlank()
         }
     }
 
     @Test
-    fun `getCurrentRates should properly serialize all currency fields`() = runTest {
+    fun `getCurrentRates should properly serialize all TableDto fields`() = runTest {
         // Given - API instance injected by Koin
 
         // When - Test JSON serialization with shouldNotThrowAny
         shouldNotThrowAny {
             val result = api.getCurrentRates()
 
-            // Then - Verify that all currency fields are properly serialized
-            result.shouldNotBeEmpty()
+            // Then - Verify that all table fields are properly serialized
+            result.table.shouldNotBeNull()
+            result.table.shouldBe("A")
+            result.no.shouldNotBeNull()
+            result.no.shouldNotBeBlank()
+            result.effectiveDate.shouldNotBeNull()
+            result.effectiveDate.shouldNotBeBlank()
+            result.rates.shouldNotBeNull()
 
-            result.forEach { currency ->
+            // Verify all currency fields are properly serialized
+            result.rates.forEach { currency ->
                 currency.currency.shouldNotBeNull()
                 currency.currency.shouldNotBeBlank()
                 currency.code.shouldNotBeNull()
