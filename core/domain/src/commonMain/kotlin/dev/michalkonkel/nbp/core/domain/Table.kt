@@ -19,7 +19,7 @@ enum class Table(val value: String) {
                 "A" -> TABLE_A
                 "B" -> TABLE_B
                 "C" -> TABLE_C
-                else -> TABLE_A
+                else -> throw IllegalStateException("Unknown table type: $value")
             }
         }
     }

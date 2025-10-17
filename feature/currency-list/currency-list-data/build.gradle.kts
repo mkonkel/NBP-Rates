@@ -18,8 +18,10 @@ kotlin {
             implementation(projects.feature.currencyList.currencyListNetwork)
             implementation(libs.koin.core)
         }
-        androidUnitTest.dependencies {
+        commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.junit)
+            implementation(libs.kotest.assertions)
         }
     }
 }
