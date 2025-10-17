@@ -9,27 +9,28 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class CurrencyDetailsMapperTest {
-
     @Test
     fun `mapToDomain should map CurrencyRateDto to CurrencyDetails with complete data`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "A",
-            currency = "dolar amerykański",
-            code = "USD",
-            rates = listOf(
-                RateDto(
-                    no = "1/A/NBP/2024",
-                    effectiveDate = "2024-01-02",
-                    mid = 4.1234,
-                ),
-                RateDto(
-                    no = "2/A/NBP/2024",
-                    effectiveDate = "2024-01-03",
-                    mid = 4.2345,
-                ),
-            ),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "A",
+                currency = "dolar amerykański",
+                code = "USD",
+                rates =
+                    listOf(
+                        RateDto(
+                            no = "1/A/NBP/2024",
+                            effectiveDate = "2024-01-02",
+                            mid = 4.1234,
+                        ),
+                        RateDto(
+                            no = "2/A/NBP/2024",
+                            effectiveDate = "2024-01-03",
+                            mid = 4.2345,
+                        ),
+                    ),
+            )
 
         // When
         val result = CurrencyDetailsMapper.mapToDomain(dto)
@@ -54,18 +55,20 @@ class CurrencyDetailsMapperTest {
     @Test
     fun `mapToDomain should handle table B correctly`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "B",
-            currency = "dolar australijski",
-            code = "AUD",
-            rates = listOf(
-                RateDto(
-                    no = "1/B/NBP/2024",
-                    effectiveDate = "2024-01-02",
-                    mid = 2.7654,
-                ),
-            ),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "B",
+                currency = "dolar australijski",
+                code = "AUD",
+                rates =
+                    listOf(
+                        RateDto(
+                            no = "1/B/NBP/2024",
+                            effectiveDate = "2024-01-02",
+                            mid = 2.7654,
+                        ),
+                    ),
+            )
 
         // When
         val result = CurrencyDetailsMapper.mapToDomain(dto)
@@ -77,18 +80,20 @@ class CurrencyDetailsMapperTest {
     @Test
     fun `mapToDomain should handle invalid table type gracefully`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "X", // Invalid table type
-            currency = "test currency",
-            code = "TEST",
-            rates = listOf(
-                RateDto(
-                    no = "1/X/NBP/2024",
-                    effectiveDate = "2024-01-02",
-                    mid = 1.0,
-                ),
-            ),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "X",
+                currency = "test currency",
+                code = "TEST",
+                rates =
+                    listOf(
+                        RateDto(
+                            no = "1/X/NBP/2024",
+                            effectiveDate = "2024-01-02",
+                            mid = 1.0,
+                        ),
+                    ),
+            )
 
         shouldThrow<IllegalStateException> {
             CurrencyDetailsMapper.mapToDomain(dto)
@@ -98,12 +103,13 @@ class CurrencyDetailsMapperTest {
     @Test
     fun `mapToDomain should handle empty rates list`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "A",
-            currency = "test currency",
-            code = "TEST",
-            rates = emptyList(),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "A",
+                currency = "test currency",
+                code = "TEST",
+                rates = emptyList(),
+            )
 
         // When
         val result = CurrencyDetailsMapper.mapToDomain(dto)
@@ -119,18 +125,20 @@ class CurrencyDetailsMapperTest {
     @Test
     fun `mapToDomain should handle null values correctly`() {
         // Given
-        val dto = CurrencyRateDto(
-            table = "C",
-            currency = "euro",
-            code = "EUR",
-            rates = listOf(
-                RateDto(
-                    no = "1/C/NBP/2024",
-                    effectiveDate = "2024-01-02",
-                    mid = 4.5678,
-                ),
-            ),
-        )
+        val dto =
+            CurrencyRateDto(
+                table = "C",
+                currency = "euro",
+                code = "EUR",
+                rates =
+                    listOf(
+                        RateDto(
+                            no = "1/C/NBP/2024",
+                            effectiveDate = "2024-01-02",
+                            mid = 4.5678,
+                        ),
+                    ),
+            )
 
         // When
         val result = CurrencyDetailsMapper.mapToDomain(dto)
