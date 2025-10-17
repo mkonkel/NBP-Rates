@@ -15,10 +15,5 @@ import org.koin.compose.koinInject
 fun App() {
     MaterialTheme {
 
-
-        CurrencyListScreen(
-            viewModel = viewModel,
-            modifier = Modifier.fillMaxSize().padding(),
-        )
     }
 }
