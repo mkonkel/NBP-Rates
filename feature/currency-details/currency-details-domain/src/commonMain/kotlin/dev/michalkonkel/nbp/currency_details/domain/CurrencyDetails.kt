@@ -28,6 +28,7 @@ data class HistoricalRate(
 interface CurrencyDetailsRepository {
     suspend fun getCurrencyDetails(
         code: String,
+        table: Table = Table.TABLE_A,
         days: Int = 30,
     ): Result<CurrencyDetails>
 }

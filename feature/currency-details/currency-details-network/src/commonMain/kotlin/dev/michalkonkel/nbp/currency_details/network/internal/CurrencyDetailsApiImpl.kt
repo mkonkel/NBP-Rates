@@ -15,8 +15,9 @@ internal class CurrencyDetailsApiImpl(
 ) : CurrencyDetailsApi {
     override suspend fun getCurrencyRatesLastDays(
         code: String,
+        tableType: String,
         days: Int,
     ): CurrencyRateDto {
-        return httpClient.get("exchangerates/rates/a/$code/last/$days").body()
+        return httpClient.get("exchangerates/rates/$tableType/$code/last/$days").body()
     }
 }

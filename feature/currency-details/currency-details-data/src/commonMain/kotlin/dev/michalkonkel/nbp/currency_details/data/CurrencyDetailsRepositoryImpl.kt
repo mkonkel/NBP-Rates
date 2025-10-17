@@ -1,5 +1,6 @@
 package dev.michalkonkel.nbp.currency_details.data
 
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.data.mapper.CurrencyDetailsMapper
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
@@ -10,11 +11,12 @@ internal class CurrencyDetailsRepositoryImpl(
 ) : CurrencyDetailsRepository {
     override suspend fun getCurrencyDetails(
         code: String,
+        table: Table,
         days: Int,
     ): Result<CurrencyDetails> {
         return try {
             val result =
-                currencyDetailsApi.getCurrencyRatesLastDays(code, days)
+                currencyDetailsApi.getCurrencyRatesLastDays(code, table.value, days)
                     .let { CurrencyDetailsMapper.mapToDomain(it) }
             Result.success(result)
         } catch (e: Exception) {

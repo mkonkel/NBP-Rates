@@ -34,6 +34,7 @@ class FakeCurrencyDetailsRepository(
 
     override suspend fun getCurrencyDetails(
         code: String,
+        table: Table,
         days: Int,
     ): Result<CurrencyDetails> {
         return detailsResult

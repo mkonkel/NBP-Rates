@@ -2,6 +2,7 @@ package dev.michalkonkel.nbp.currency_details.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,12 +36,13 @@ internal class CurrencyDetailsViewModel(
      */
     fun loadCurrencyDetails(
         code: String,
+        table: Table = Table.TABLE_A,
         days: Int = 30,
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            repository.getCurrencyDetails(code, days)
+            repository.getCurrencyDetails(code, table, days)
                 .onSuccess { details ->
                     _uiState.value =
                         _uiState.value.copy(

@@ -1,8 +1,11 @@
 package dev.michalkonkel.nbp.core.domain
 
+import kotlinx.serialization.Serializable
+
 /**
  * Enum representing NBP exchange rate table types.
  */
+@Serializable
 enum class Table(val value: String) {
     TABLE_A("A"),
     TABLE_B("B"),

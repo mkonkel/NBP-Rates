@@ -1,5 +1,6 @@
 package dev.michalkonkel.nbp.currency_details.presentation
 
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetailsRepository
 import dev.michalkonkel.nbp.currency_details.presentation.di.currencyDetailsPresentationModule
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -56,7 +57,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("USD", 5)
+            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
             // Then
             with(viewModel.uiState.value) {
@@ -85,7 +86,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("USD", 5)
+            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
             // Then
             with(viewModel.uiState.value) {
@@ -109,7 +110,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("TEST", 1)
+            viewModel.loadCurrencyDetails("TEST", Table.TABLE_A, 1)
 
             // Then
             with(viewModel.uiState.value) {
@@ -129,7 +130,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val fakeRepository = FakeCurrencyDetailsRepository.createError()
             declare<CurrencyDetailsRepository> { fakeRepository }
             val viewModel: CurrencyDetailsViewModel by inject()
-            viewModel.loadCurrencyDetails("USD", 5)
+            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
             // When
             viewModel.clearError()
@@ -152,7 +153,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
 
             // When
             shouldNotThrowAny {
-                viewModel.loadCurrencyDetails("EUR", 3)
+                viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
             }
 
             // Then - After completion, loading should be false
@@ -168,7 +169,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("USD", 10)
+            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 10)
 
             // Then
             with(viewModel.uiState.value) {
@@ -193,7 +194,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("EUR", 3)
+            viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
 
             // Then
             with(viewModel.uiState.value) {
@@ -222,7 +223,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
             val viewModel: CurrencyDetailsViewModel by inject()
 
             // When
-            viewModel.loadCurrencyDetails("EUR", 3)
+            viewModel.loadCurrencyDetails("EUR", Table.TABLE_A, 3)
             with(viewModel.uiState.value.currencyDetails.shouldNotBeNull()) {
                 code.shouldBe("EUR")
             }
@@ -234,7 +235,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
                 ),
             )
 
-            viewModel.loadCurrencyDetails("USD", 5)
+            viewModel.loadCurrencyDetails("USD", Table.TABLE_A, 5)
 
             // Then
             with(viewModel.uiState.value.currencyDetails.shouldNotBeNull()) {

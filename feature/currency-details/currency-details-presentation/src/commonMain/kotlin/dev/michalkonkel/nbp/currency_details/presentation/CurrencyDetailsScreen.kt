@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.michalkonkel.nbp.core.domain.Table
 import dev.michalkonkel.nbp.currency_details.domain.CurrencyDetails
 import dev.michalkonkel.nbp.currency_details.domain.HistoricalRate
 import org.koin.compose.koinInject
@@ -26,18 +27,22 @@ import org.koin.compose.koinInject
 @Composable
 fun CurrencyDetailsScreen(
     currencyCode: String,
+    table: Table,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CurrencyDetailsViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
     // Load currency details when screen is composed
-    androidx.compose.runtime.LaunchedEffect(currencyCode) {
-        viewModel.loadCurrencyDetails(currencyCode)
+    androidx.compose.runtime.LaunchedEffect(currencyCode, table) {
+        viewModel.loadCurrencyDetails(currencyCode, table)
     }
 
     Box(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         when {
             state.isLoading -> {

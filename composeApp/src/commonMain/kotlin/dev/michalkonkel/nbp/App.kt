@@ -23,15 +23,18 @@ fun App() {
         ) {
             composable<Screen.CurrencyList> {
                 CurrencyListScreen(
-                    onCurrencyClick = { currencyCode ->
-                        navController.navigate(Screen.CurrencyDetails(currencyCode))
+                    onCurrencyClick = { currencyCode, table ->
+                        navController.navigate(Screen.CurrencyDetails(currencyCode, table))
                     },
                 )
             }
 
             composable<Screen.CurrencyDetails> { backStackEntry ->
                 val args = backStackEntry.toRoute<Screen.CurrencyDetails>()
-                CurrencyDetailsScreen(currencyCode = args.currencyCode)
+                CurrencyDetailsScreen(
+                    currencyCode = args.currencyCode,
+                    table = args.table,
+                )
             }
         }
     }

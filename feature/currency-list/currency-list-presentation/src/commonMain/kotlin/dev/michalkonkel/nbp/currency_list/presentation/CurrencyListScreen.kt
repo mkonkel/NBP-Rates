@@ -25,7 +25,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun CurrencyListScreen(
-    onCurrencyClick: (String) -> Unit = {},
+    onCurrencyClick: (String, dev.michalkonkel.nbp.core.domain.Table) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CurrencyListViewModel = koinInject()
@@ -57,7 +57,7 @@ fun CurrencyListScreen(
                     items(state.currencies) { currency ->
                         CurrencyItem(
                             currency = currency,
-                            onClick = { onCurrencyClick(currency.code) },
+                            onClick = { onCurrencyClick(currency.code, currency.table) },
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }

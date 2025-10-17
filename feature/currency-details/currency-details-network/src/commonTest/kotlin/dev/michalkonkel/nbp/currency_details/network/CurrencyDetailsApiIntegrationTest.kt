@@ -44,7 +44,7 @@ class CurrencyDetailsApiIntegrationTest : KoinTest {
 
             // When - Test JSON serialization with shouldNotThrowAny
             shouldNotThrowAny {
-                val result = api.getCurrencyRatesLastDays(code, days)
+                val result = api.getCurrencyRatesLastDays(code, "A", days)
 
                 // Then - Verify that JSON serialization worked and we got data
                 result.table.shouldBe("A")
@@ -69,7 +69,7 @@ class CurrencyDetailsApiIntegrationTest : KoinTest {
 
             // When - Test JSON serialization with shouldNotThrowAny
             shouldNotThrowAny {
-                val result = api.getCurrencyRatesLastDays(code, days)
+                val result = api.getCurrencyRatesLastDays(code, "A", days)
 
                 // Then - Verify that all currency and rate fields are properly serialized
                 result.table.shouldBe("A") // Simplified for test

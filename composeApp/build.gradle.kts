@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(projects.core.ui)
             implementation(projects.core.network)
+            implementation(projects.core.domain)
             implementation(projects.diContainer)
             implementation(projects.feature.currencyList.currencyListPresentation)
             implementation(projects.feature.currencyDetails.currencyDetailsPresentation)
