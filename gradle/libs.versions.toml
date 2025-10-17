@@ -13,6 +13,7 @@ composeMultiplatform = "1.9.0"
 junit = "4.13.2"
 kotlin = "2.2.20"
 koin = "4.1.1"
+kotest = "6.0.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -31,11 +32,15 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version = "2.3.12" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version = "2.3.12" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.9.0" }
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.23.7" }
 spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

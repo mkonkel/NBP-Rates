@@ -21,6 +21,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.junit)
+            implementation(libs.kotest.assertions)
+            implementation(libs.koin.test)
+            implementation(projects.core.network)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }
