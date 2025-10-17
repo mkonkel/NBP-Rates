@@ -32,10 +32,9 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(projects.core.ui)
             implementation(projects.core.network)
-            implementation(projects.feature.currencyList.currencyListDomain)
-            implementation(projects.feature.currencyList.currencyListNetwork)
-            implementation(projects.feature.currencyList.currencyListData)
+            implementation(projects.diContainer)
             implementation(projects.feature.currencyList.currencyListPresentation)
+            implementation(projects.feature.currencyDetails.currencyDetailsPresentation)
         }
 
         androidUnitTest.dependencies {
