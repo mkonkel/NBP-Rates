@@ -14,22 +14,9 @@ kotlin {
         }
     }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
-        commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -38,23 +25,20 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(projects.core.ui)
-        }
-
-        androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.core)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
+            implementation(projects.core.ui)
+            implementation(projects.core.network)
+            implementation(projects.feature.currencyList.currencyListDomain)
+            implementation(projects.feature.currencyList.currencyListNetwork)
+            implementation(projects.feature.currencyList.currencyListData)
+            implementation(projects.feature.currencyList.currencyListPresentation)
         }
 
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-        }
-        commonTest.dependencies {
+        androidUnitTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }

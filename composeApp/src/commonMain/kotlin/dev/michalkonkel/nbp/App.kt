@@ -15,10 +15,10 @@ import org.koin.compose.koinInject
 fun App() {
     MaterialTheme {
         val viewModel: CurrencyListViewModel = koinInject()
-        
+
         CurrencyListScreen(
             viewModel = viewModel,
-            modifier = Modifier.fillMaxSize().padding()
+            modifier = Modifier.fillMaxSize().padding(),
         )
     }
 }
