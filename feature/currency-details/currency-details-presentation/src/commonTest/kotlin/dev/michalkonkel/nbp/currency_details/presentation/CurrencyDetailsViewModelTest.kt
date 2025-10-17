@@ -98,6 +98,7 @@ class CurrencyDetailsViewModelTest : KoinTest {
         // Given
         val emptyRepo = FakeCurrencyDetailsRepository.createEmpty()
         val fakeRepository = FakeCurrencyDetailsRepository()
+
         declare<CurrencyDetailsRepository> { fakeRepository }
         fakeRepository.setCurrencyDetailsResult(
             Result.success(emptyRepo.currencyDetails!!)
