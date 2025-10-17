@@ -3,6 +3,8 @@ package dev.michalkonkel.nbp.network
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -24,6 +26,7 @@ internal class HttpClientFactory {
 
             defaultRequest {
                 url("https://api.nbp.pl/api/")
+                contentType(ContentType.Application.Json)
             }
         }
 }
