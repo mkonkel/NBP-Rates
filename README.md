@@ -12,27 +12,39 @@ The project follows **feature-specific modular architecture** with MVVM pattern 
 
 ### Core Modules
 - **`core:network`** - Shared HTTP client factory using Ktor for API communication
-- **`core:ui`** - Shared UI components and Compose utilities
+- **`core:ui`** - Shared UI components and Compose utilities  
 - **`core:database`** - Shared database layer (Room/SQLite)
 
 ### Feature Modules
 
-#### `feature:currency_list`
+#### `feature:currency_list` ✅ **COMPLETED**
 Displays list of available currencies with current rates:
-- **`currency-list-domain`** - Domain models, repository interfaces, business logic
-- **`currency-list-network`** - NBP API integration and data transfer objects  
-- **`currency-list-data`** - Repository implementations connecting network to domain
-- **`currency-list-presentation`** - ViewModels and Compose UI screens
+- **`currency-list-domain`** - Domain models (`Currency`, `CurrencyList`), repository interfaces
+- **`currency-list-network`** - NBP API integration with public `CurrencyListApi` interface + internal implementation
+- **`currency-list-data`** - Repository implementation with proper DI and error handling
+- **`currency-list-presentation`** - ViewModel with UDF state management and public `CurrencyListScreen`
+- **`currency-list-di`** - Centralized DI modules aggregating all layers
 
-#### `feature:currency_details` 
+#### `feature:currency_details` ✅ **COMPLETED**
 Shows detailed information and historical rates for selected currency:
-- **`currency-details-domain`** - Domain models and repository interfaces
-- **`currency-details-network`** - Historical rate API integration
-- **`currency-details-data`** - Repository implementations
-- **`currency-details-presentation`** - ViewModels and detail screens
+- **`currency-details-domain`** - Domain models (`CurrencyDetails`, `HistoricalRate`), repository interfaces
+- **`currency-details-network`** - Historical rate API with public `CurrencyDetailsApi` interface + internal implementation
+- **`currency-details-data`** - Repository implementation with proper DI and error handling
+- **`currency-details-presentation`** - ViewModel with UDF state management and public `CurrencyDetailsScreen`
+- **`currency-details-di`** - Centralized DI modules aggregating all layers
 
 ### Application Module
 - **`composeApp`** - Main application entry point, platform-specific implementations, and dependency injection setup
+
+## Implementation Status ✅
+
+Both feature modules are **fully implemented** with:
+- ✅ Complete layered architecture (API → Domain → Data → Presentation)
+- ✅ Proper visibility modifiers (public interfaces, internal implementations)
+- ✅ Dependency injection with Koin
+- ✅ Android-first KMP configuration
+- ✅ Code quality with Detekt and Spotless
+- ✅ Buildable modules with proper dependencies
 
 ## Technology Stack
 
@@ -43,30 +55,85 @@ Shows detailed information and historical rates for selected currency:
 - **Koin** - Dependency injection
 - **Detekt & Spotless** - Code quality and formatting
 
+## Key Features
+
+### Currency List (`currency_list`)
+- Display current exchange rates from NBP Table A
+- Real-time data fetching with loading states
+- Error handling and retry mechanisms
+- Clean MVVM architecture with UDF
+
+### Currency Details (`currency_details`)
+- Detailed currency information with current rate
+- Historical rates (configurable days, default 30)
+- Interactive charts and rate trends
+- Currency-specific data visualization
+
 ## NBP API Integration
 
 The application consumes the official NBP API endpoints:
-- Current exchange rates (`/api/exchangerates/tables/{table}`)
-- Historical rates and currency details
+- **Current rates**: `/api/exchangerates/tables/a` (Table A)
+- **Historical rates**: `/api/exchangerates/rates/a/{code}/last/{days}`
 
-### Build and Run Android Application
+## Development Setup
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+### Prerequisites
+- JDK 17+
+- Android Studio or IntelliJ IDEA
+- Kotlin Multiplatform plugin
 
-### Build and Run iOS Application
+### Build Commands
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+#### Android Application
+```bash
+# Build debug APK
+./gradlew :composeApp:assembleDebug
+
+# Run on connected device/emulator
+./gradlew :composeApp:installDebug
+```
+
+#### Code Quality
+```bash
+# Run code formatting
+./gradlew spotlessApply
+
+# Run static analysis
+./gradlew detekt
+```
+
+#### Module-specific builds
+```bash
+# Build individual feature modules
+./gradlew :feature:currency-list:build
+./gradlew :feature:currency-details:build
+```
+
+## Project Structure
+
+```
+feature/
+├── currency_list/
+│   ├── currency-list-domain/     # Domain models + repository interfaces
+│   ├── currency-list-network/    # API service + DTOs (public/internal)
+│   ├── currency-list-data/        # Repository implementations
+│   ├── currency-list-presentation/ # ViewModels + Compose UI
+│   └── currency-list-di/          # Centralized DI modules
+└── currency_details/
+    ├── currency-details-domain/
+    ├── currency-details-network/
+    ├── currency-details-data/
+    ├── currency-details-presentation/
+    └── currency-details-di/
+```
+
+## Quality Standards
+
+- **Detekt**: Zero critical issues enforced
+- **Spotless**: Consistent formatting with ktlint
+- **Architecture**: Clean separation of concerns
+- **Testing**: Repository pattern with Result<T> for error handling
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
